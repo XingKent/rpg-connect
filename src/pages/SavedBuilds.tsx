@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { races } from '@/data/races';
 import { classes } from '@/data/classes';
 import { useBuildStore } from '@/store/buildStore';
@@ -8,11 +8,30 @@ export function SavedBuilds() {
   const savedBuilds = useBuildStore((s) => s.savedBuilds);
   const loadDraft = useBuildStore((s) => s.loadDraft);
   const deleteBuild = useBuildStore((s) => s.deleteBuild);
+  const resetDraft = useBuildStore((s) => s.resetDraft);
+  const draft = useBuildStore((s) => s.draft);
   const navigate = useNavigate();
 
   function handleEdit(id: string) {
     const build = savedBuilds.find((b) => b.id === id);
     if (build) loadDraft(build);
+    navigate('/build-planner');
+  }
+
+  function handleNewBuild() {
+    const hasProgress =
+      draft.name ||
+      draft.raceId ||
+      draft.classId ||
+      draft.featIds.length > 0 ||
+      draft.equipmentIds.length > 0;
+    if (
+      hasProgress &&
+      !window.confirm('Começar uma nova build vai limpar os campos preenchidos. Continuar?')
+    ) {
+      return;
+    }
+    resetDraft();
     navigate('/build-planner');
   }
 
@@ -23,9 +42,7 @@ export function SavedBuilds() {
           <h1 className="rune-title text-xl text-gold-bright">Builds salvas</h1>
           <p className="mt-1 text-sm text-ink-dim">Suas builds ficam guardadas neste dispositivo.</p>
         </div>
-        <Link to="/build-planner">
-          <Button>Nova build</Button>
-        </Link>
+        <Button onClick={handleNewBuild}>Nova build</Button>
       </header>
 
       {savedBuilds.length === 0 ? (

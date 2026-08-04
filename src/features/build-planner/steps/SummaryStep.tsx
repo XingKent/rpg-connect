@@ -20,6 +20,7 @@ export function SummaryStep() {
   const navigate = useNavigate();
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [justSaved, setJustSaved] = useState(false);
 
   const race = races.find((r) => r.id === draft.raceId);
   const subrace = race?.subraces?.find((s) => s.id === draft.subraceId);
@@ -35,10 +36,14 @@ export function SummaryStep() {
 
   function handleSave() {
     saveDraft();
+    setJustSaved(true);
+    setTimeout(() => setJustSaved(false), 2500);
   }
 
   function handleShare() {
     const saved = saveDraft();
+    setJustSaved(true);
+    setTimeout(() => setJustSaved(false), 2500);
     const code = encodeBuildForShare(saved);
     const url = `${window.location.origin}/build/${code}`;
     setShareUrl(url);
@@ -69,7 +74,7 @@ export function SummaryStep() {
           id="build-name"
           value={draft.name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="ex.: Druida da Lua"
+          placeholder="ex.: Moon Druid do Guilherme"
           className="focus-ring mt-2 w-full rounded-sm border border-border-ember bg-surface-inset px-3 py-2 font-display text-lg text-ink placeholder:text-ink-faint"
         />
 
@@ -117,7 +122,7 @@ export function SummaryStep() {
 
       <div className="flex flex-wrap items-center gap-3">
         <Button onClick={handleSave} disabled={!draft.name || !draft.raceId || !draft.classId}>
-          Salvar build
+          {justSaved ? 'Build salva ✓' : 'Salvar build'}
         </Button>
         <Button
           variant="ghost"
@@ -129,6 +134,11 @@ export function SummaryStep() {
         <Button variant="ghost" onClick={() => navigate('/builds')}>
           Ver builds salvas
         </Button>
+        {justSaved && (
+          <span role="status" className="font-data text-xs text-emerald-bright">
+            Sua build foi salva neste dispositivo.
+          </span>
+        )}
       </div>
 
       {shareUrl && (
