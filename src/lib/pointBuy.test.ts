@@ -7,6 +7,8 @@ import {
   scoreCost,
   totalSpent,
   abilityModifier,
+  recommendedDistribution,
+  POINT_BUY_BUDGET,
 } from '@/lib/pointBuy';
 
 describe('pointBuy', () => {
@@ -46,5 +48,30 @@ describe('pointBuy', () => {
     expect(abilityModifier(10)).toBe(0);
     expect(abilityModifier(15)).toBe(2);
     expect(abilityModifier(20)).toBe(5);
+  });
+
+  describe('recommendedDistribution', () => {
+    it('spends exactly the full point-buy budget', () => {
+      const scores = recommendedDistribution(['wis']);
+      expect(totalSpent(scores)).toBe(POINT_BUY_BUDGET);
+    });
+
+    it('gives the highest score to the primary ability', () => {
+      const scores = recommendedDistribution(['dex']);
+      expect(scores.dex).toBe(15);
+    });
+
+    it('prioritizes multiple primary abilities before falling back to CON', () => {
+      const scores = recommendedDistribution(['str', 'dex']);
+      expect(scores.str).toBe(15);
+      expect(scores.dex).toBe(14);
+      expect(scores.con).toBe(13);
+    });
+
+    it('still gives Constitution a solid score when it is not primary', () => {
+      const scores = recommendedDistribution(['int']);
+      expect(scores.int).toBe(15);
+      expect(scores.con).toBe(14);
+    });
   });
 });

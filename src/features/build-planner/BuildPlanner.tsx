@@ -3,20 +3,32 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { StepRail, type StepDef } from '@/components/StepRail';
 import { useBuildStore } from '@/store/buildStore';
 import { buildCompleteness } from '@/lib/buildCalculations';
+import { Button } from '@/components/ui/Button';
 import { RaceStep } from './steps/RaceStep';
 import { ClassStep } from './steps/ClassStep';
+import { SubclassStep } from './steps/SubclassStep';
 import { AbilitiesStep } from './steps/AbilitiesStep';
 import { FeatsStep } from './steps/FeatsStep';
 import { SpellsStep } from './steps/SpellsStep';
 import { EquipmentStep } from './steps/EquipmentStep';
 import { SummaryStep } from './steps/SummaryStep';
 
-const STEP_KEYS = ['race', 'class', 'abilities', 'feats', 'spells', 'equipment', 'summary'] as const;
+const STEP_KEYS = [
+  'race',
+  'class',
+  'subclass',
+  'abilities',
+  'feats',
+  'spells',
+  'equipment',
+  'summary',
+] as const;
 type StepKey = (typeof STEP_KEYS)[number];
 
 const STEP_COMPONENTS: Record<StepKey, ComponentType> = {
   race: RaceStep,
   class: ClassStep,
+  subclass: SubclassStep,
   abilities: AbilitiesStep,
   feats: FeatsStep,
   spells: SpellsStep,
@@ -27,6 +39,7 @@ const STEP_COMPONENTS: Record<StepKey, ComponentType> = {
 const STEP_LABELS: Record<StepKey, string> = {
   race: 'Raça',
   class: 'Classe',
+  subclass: 'Subclasse',
   abilities: 'Atributos',
   feats: 'Talentos',
   spells: 'Magias',
@@ -37,6 +50,7 @@ const STEP_LABELS: Record<StepKey, string> = {
 export function BuildPlanner() {
   const [active, setActive] = useState<StepKey>('race');
   const draft = useBuildStore((s) => s.draft);
+  const resetDraft = useBuildStore((s) => s.resetDraft);
   const completeness = buildCompleteness(draft);
 
   const steps: StepDef[] = STEP_KEYS.map((key) => ({
@@ -53,12 +67,34 @@ export function BuildPlanner() {
     setActive(STEP_KEYS[index]);
   }
 
+  function handleNewBuild() {
+    const hasProgress =
+      draft.name ||
+      draft.raceId ||
+      draft.classId ||
+      draft.featIds.length > 0 ||
+      draft.equipmentIds.length > 0;
+    if (
+      hasProgress &&
+      !window.confirm('Começar uma nova build vai limpar todos os campos preenchidos. Continuar?')
+    ) {
+      return;
+    }
+    resetDraft();
+    setActive('race');
+  }
+
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 md:flex-row md:gap-10 md:px-6 md:py-12">
       <aside className="md:w-56 md:shrink-0">
         <div className="mb-4 hidden md:block">
           <h1 className="rune-title text-lg text-ink">Build Planner</h1>
           <p className="mt-1 text-xs text-ink-faint">Construa seu personagem passo a passo.</p>
+        </div>
+        <div className="mb-4">
+          <Button variant="ghost" className="w-full" onClick={handleNewBuild}>
+            + Nova build
+          </Button>
         </div>
         <StepRail steps={steps} activeKey={active} onSelect={(key) => setActive(key as StepKey)} />
       </aside>

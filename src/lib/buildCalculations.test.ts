@@ -52,4 +52,24 @@ describe('buildCalculations', () => {
     // Human +1 DEX -> 15 total -> mod +2. Base 10 + 2 + cloak's +1 AC = 13
     expect(baseArmorClass(build)).toBe(13);
   });
+
+  it('stacks armor-class stats from multiple equipped items', () => {
+    const build = makeBuild({
+      raceId: 'human',
+      abilityScores: { ...DEFAULT_SCORES, dex: 8 },
+      equipmentIds: ['cloak-of-protection', 'ring-of-protection'],
+    });
+    // Human +1 DEX -> 9 total -> mod -1. Base 10 - 1 + 1 (cloak) + 1 (ring) = 11
+    expect(baseArmorClass(build)).toBe(11);
+  });
+
+  it('reads ability bonuses from equipment stats entries (e.g. the arcane staff)', () => {
+    const build = makeBuild({
+      raceId: 'human',
+      abilityScores: { ...DEFAULT_SCORES, int: 14 },
+      equipmentIds: ['staff-of-spellpower'],
+    });
+    // Human +1 INT -> 15, staff adds +1 INT via its stats array -> 16
+    expect(finalScores(build).int).toBe(16);
+  });
 });

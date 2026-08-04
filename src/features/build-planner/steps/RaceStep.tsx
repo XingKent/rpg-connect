@@ -1,17 +1,26 @@
 import { races } from '@/data/races';
 import { SelectCard } from '@/components/ui/SelectCard';
+import { Button } from '@/components/ui/Button';
 import { useBuildStore } from '@/store/buildStore';
 
 export function RaceStep() {
   const draft = useBuildStore((s) => s.draft);
   const setRace = useBuildStore((s) => s.setRace);
+  const clearRace = useBuildStore((s) => s.clearRace);
   const selectedRace = races.find((r) => r.id === draft.raceId);
 
   return (
     <div className="flex flex-col gap-6">
-      <header>
-        <h2 className="rune-title text-xl text-gold-bright">Raça</h2>
-        <p className="mt-1 text-sm text-ink-dim">Escolha a ascendência do seu personagem.</p>
+      <header className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="rune-title text-xl text-gold-bright">Raça</h2>
+          <p className="mt-1 text-sm text-ink-dim">Escolha a ascendência do seu personagem.</p>
+        </div>
+        {draft.raceId && (
+          <Button variant="ghost" onClick={clearRace}>
+            Limpar seleção
+          </Button>
+        )}
       </header>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

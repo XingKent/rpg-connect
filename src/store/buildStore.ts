@@ -1,7 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AbilityKey, AbilityScores, Build } from '@/types/bg3';
-import { DEFAULT_SCORES, canDecrease, canIncrease } from '@/lib/pointBuy';
+import { classes } from '@/data/classes';
+import { DEFAULT_SCORES, canDecrease, canIncrease, recommendedDistribution } from '@/lib/pointBuy';
+
+export const FEAT_LIMIT = 3;
 
 function emptyDraft(): Build {
   const now = new Date().toISOString();
@@ -27,16 +30,29 @@ interface BuildStoreState {
 
   setName: (name: string) => void;
   setRace: (raceId: string, subraceId?: string) => void;
-  setClass: (classId: string, subclassId?: string) => void;
+  clearRace: () => void;
+  setClass: (classId: string) => void;
+  clearClass: () => void;
+  setSubclass: (subclassId: string) => void;
+  clearSubclass: () => void;
   increaseAbility: (key: AbilityKey) => void;
   decreaseAbility: (key: AbilityKey) => void;
+  resetAbilities: () => void;
+  applyRecommendedAbilities: () => void;
   toggleFeat: (featId: string) => void;
+  clearFeats: () => void;
   toggleSpell: (spellId: string) => void;
+  clearSpells: () => void;
   toggleEquipment: (equipmentId: string) => void;
+  clearEquipment: () => void;
   resetDraft: () => void;
   loadDraft: (build: Build) => void;
   saveDraft: () => Build;
   deleteBuild: (id: string) => void;
+}
+
+function touch(): Pick<Build, 'updatedAt'> {
+  return { updatedAt: new Date().toISOString() };
 }
 
 export const useBuildStore = create<BuildStoreState>()(
@@ -45,13 +61,27 @@ export const useBuildStore = create<BuildStoreState>()(
       draft: emptyDraft(),
       savedBuilds: [],
 
-      setName: (name) => set((s) => ({ draft: { ...s.draft, name, updatedAt: new Date().toISOString() } })),
+      setName: (name) => set((s) => ({ draft: { ...s.draft, name, ...touch() } })),
 
-      setRace: (raceId, subraceId) =>
-        set((s) => ({ draft: { ...s.draft, raceId, subraceId, updatedAt: new Date().toISOString() } })),
+      setRace: (raceId, subraceId) => set((s) => ({ draft: { ...s.draft, raceId, subraceId, ...touch() } })),
 
-      setClass: (classId, subclassId) =>
-        set((s) => ({ draft: { ...s.draft, classId, subclassId, updatedAt: new Date().toISOString() } })),
+      clearRace: () => set((s) => ({ draft: { ...s.draft, raceId: '', subraceId: undefined, ...touch() } })),
+
+      setClass: (classId) =>
+        set((s) => {
+          const cls = classes.find((c) => c.id === classId);
+          const abilityScores = cls ? recommendedDistribution(cls.primaryAbility) : s.draft.abilityScores;
+          return {
+            draft: { ...s.draft, classId, subclassId: undefined, abilityScores, ...touch() },
+          };
+        }),
+
+      clearClass: () =>
+        set((s) => ({ draft: { ...s.draft, classId: '', subclassId: undefined, ...touch() } })),
+
+      setSubclass: (subclassId) => set((s) => ({ draft: { ...s.draft, subclassId, ...touch() } })),
+
+      clearSubclass: () => set((s) => ({ draft: { ...s.draft, subclassId: undefined, ...touch() } })),
 
       increaseAbility: (key) =>
         set((s) => {
@@ -60,7 +90,7 @@ export const useBuildStore = create<BuildStoreState>()(
             ...s.draft.abilityScores,
             [key]: s.draft.abilityScores[key] + 1,
           };
-          return { draft: { ...s.draft, abilityScores, updatedAt: new Date().toISOString() } };
+          return { draft: { ...s.draft, abilityScores, ...touch() } };
         }),
 
       decreaseAbility: (key) =>
@@ -70,15 +100,34 @@ export const useBuildStore = create<BuildStoreState>()(
             ...s.draft.abilityScores,
             [key]: s.draft.abilityScores[key] - 1,
           };
-          return { draft: { ...s.draft, abilityScores, updatedAt: new Date().toISOString() } };
+          return { draft: { ...s.draft, abilityScores, ...touch() } };
+        }),
+
+      resetAbilities: () =>
+        set((s) => ({ draft: { ...s.draft, abilityScores: { ...DEFAULT_SCORES }, ...touch() } })),
+
+      applyRecommendedAbilities: () =>
+        set((s) => {
+          const cls = classes.find((c) => c.id === s.draft.classId);
+          if (!cls) return s;
+          return {
+            draft: {
+              ...s.draft,
+              abilityScores: recommendedDistribution(cls.primaryAbility),
+              ...touch(),
+            },
+          };
         }),
 
       toggleFeat: (featId) =>
         set((s) => {
           const has = s.draft.featIds.includes(featId);
+          if (!has && s.draft.featIds.length >= FEAT_LIMIT) return s;
           const featIds = has ? s.draft.featIds.filter((f) => f !== featId) : [...s.draft.featIds, featId];
-          return { draft: { ...s.draft, featIds, updatedAt: new Date().toISOString() } };
+          return { draft: { ...s.draft, featIds, ...touch() } };
         }),
+
+      clearFeats: () => set((s) => ({ draft: { ...s.draft, featIds: [], ...touch() } })),
 
       toggleSpell: (spellId) =>
         set((s) => {
@@ -86,8 +135,10 @@ export const useBuildStore = create<BuildStoreState>()(
           const spellIds = has
             ? s.draft.spellIds.filter((sp) => sp !== spellId)
             : [...s.draft.spellIds, spellId];
-          return { draft: { ...s.draft, spellIds, updatedAt: new Date().toISOString() } };
+          return { draft: { ...s.draft, spellIds, ...touch() } };
         }),
+
+      clearSpells: () => set((s) => ({ draft: { ...s.draft, spellIds: [], ...touch() } })),
 
       toggleEquipment: (equipmentId) =>
         set((s) => {
@@ -95,8 +146,10 @@ export const useBuildStore = create<BuildStoreState>()(
           const equipmentIds = has
             ? s.draft.equipmentIds.filter((e) => e !== equipmentId)
             : [...s.draft.equipmentIds, equipmentId];
-          return { draft: { ...s.draft, equipmentIds, updatedAt: new Date().toISOString() } };
+          return { draft: { ...s.draft, equipmentIds, ...touch() } };
         }),
+
+      clearEquipment: () => set((s) => ({ draft: { ...s.draft, equipmentIds: [], ...touch() } })),
 
       resetDraft: () => set({ draft: emptyDraft() }),
 

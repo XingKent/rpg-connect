@@ -65,14 +65,94 @@ export type EquipmentSlot =
 
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'very-rare' | 'legendary';
 
+export type EquipmentStatType =
+  | 'strength'
+  | 'dexterity'
+  | 'constitution'
+  | 'intelligence'
+  | 'wisdom'
+  | 'charisma'
+  | 'armor-class'
+  | 'initiative'
+  | 'movement'
+  | 'damage'
+  | 'spell-save-dc'
+  | 'spell-attack';
+
+export interface EquipmentStat {
+  type: EquipmentStatType;
+  value: number | string;
+}
+
+export type EquipmentActionCooldown = 'none' | 'short-rest' | 'long-rest';
+export type EquipmentActionType = 'spell' | 'passive' | 'action' | 'bonus-action' | 'reaction';
+
+export interface EquipmentAction {
+  name: string;
+  description: string;
+  cooldown: EquipmentActionCooldown;
+  type: EquipmentActionType;
+}
+
 export interface Equipment {
   id: string;
   name: string;
   slot: EquipmentSlot;
   rarity: Rarity;
+  act: 1 | 2 | 3;
+  weight: number;
+  value: number;
+  image: string;
   description: string;
-  stats: Partial<Record<AbilityKey, number>> & { armorClass?: number; damage?: string };
+  location: string;
+  classes?: string[];
+  /** Classes/builds that get the most value out of this item. */
+  bestFor?: string[];
+  stats: EquipmentStat[];
+  actions?: EquipmentAction[];
 }
+
+const ABILITY_STAT_TO_KEY: Partial<Record<EquipmentStatType, AbilityKey>> = {
+  strength: 'str',
+  dexterity: 'dex',
+  constitution: 'con',
+  intelligence: 'int',
+  wisdom: 'wis',
+  charisma: 'cha',
+};
+
+export function equipmentStatAbilityKey(type: EquipmentStatType): AbilityKey | undefined {
+  return ABILITY_STAT_TO_KEY[type];
+}
+
+export const EQUIPMENT_STAT_LABELS: Record<EquipmentStatType, string> = {
+  strength: 'Força',
+  dexterity: 'Destreza',
+  constitution: 'Constituição',
+  intelligence: 'Inteligência',
+  wisdom: 'Sabedoria',
+  charisma: 'Carisma',
+  'armor-class': 'Classe de Armadura',
+  initiative: 'Iniciativa',
+  movement: 'Deslocamento',
+  damage: 'Dano',
+  'spell-save-dc': 'CD de Magia',
+  'spell-attack': 'Bônus de Ataque Mágico',
+};
+
+export const EQUIPMENT_ACTION_TYPE_LABELS: Record<EquipmentActionType, string> = {
+  spell: 'Magia',
+  passive: 'Passiva',
+  action: 'Ação',
+  'bonus-action': 'Ação Bônus',
+  reaction: 'Reação',
+};
+
+export const EQUIPMENT_ACTION_COOLDOWN_LABELS: Record<EquipmentActionCooldown, string> = {
+  none: 'Sem recarga',
+  'short-rest': 'Por descanso curto',
+  'long-rest': 'Por descanso longo',
+};
 
 export interface Build {
   id: string;

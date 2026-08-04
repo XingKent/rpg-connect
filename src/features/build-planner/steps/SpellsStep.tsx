@@ -1,10 +1,12 @@
 import { spells } from '@/data/spells';
 import { SelectCard } from '@/components/ui/SelectCard';
+import { Button } from '@/components/ui/Button';
 import { useBuildStore } from '@/store/buildStore';
 
 export function SpellsStep() {
   const draft = useBuildStore((s) => s.draft);
   const toggleSpell = useBuildStore((s) => s.toggleSpell);
+  const clearSpells = useBuildStore((s) => s.clearSpells);
 
   const available = spells.filter((sp) => !draft.classId || sp.classes.includes(draft.classId));
   const levels = [...new Set(available.map((s) => s.level))].sort((a, b) => a - b);
@@ -19,11 +21,18 @@ export function SpellsStep() {
 
   return (
     <div className="flex flex-col gap-6">
-      <header>
-        <h2 className="rune-title text-xl text-gold-bright">Magias</h2>
-        <p className="mt-1 text-sm text-ink-dim">
-          Selecione as magias conhecidas ou preparadas pelo seu personagem.
-        </p>
+      <header className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="rune-title text-xl text-gold-bright">Magias</h2>
+          <p className="mt-1 text-sm text-ink-dim">
+            Selecione as magias conhecidas ou preparadas pelo seu personagem.
+          </p>
+        </div>
+        {draft.spellIds.length > 0 && (
+          <Button variant="ghost" onClick={clearSpells}>
+            Limpar seleção
+          </Button>
+        )}
       </header>
 
       {levels.map((level) => (

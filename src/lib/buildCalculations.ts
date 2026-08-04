@@ -1,3 +1,4 @@
+import { equipmentStatAbilityKey } from '@/types/bg3';
 import type { AbilityKey, AbilityScores, Build } from '@/types/bg3';
 import { races } from '@/data/races';
 import { classes } from '@/data/classes';
@@ -45,8 +46,12 @@ export function equipmentBonuses(build: Build): Partial<AbilityScores> {
   for (const itemId of build.equipmentIds) {
     const item = equipment.find((e) => e.id === itemId);
     if (!item) continue;
-    for (const key of ABILITY_KEYS) {
-      if (item.stats[key]) combined[key] = (combined[key] ?? 0) + (item.stats[key] ?? 0);
+    for (const stat of item.stats) {
+      const key = equipmentStatAbilityKey(stat.type);
+      if (!key) continue;
+      const numericValue = typeof stat.value === 'number' ? stat.value : Number(stat.value);
+      if (Number.isNaN(numericValue)) continue;
+      combined[key] = (combined[key] ?? 0) + numericValue;
     }
   }
   return combined;
@@ -75,7 +80,13 @@ export function baseArmorClass(build: Build): number {
   const dexBonus = mods.dex;
   const equipBonus = build.equipmentIds.reduce((sum, id) => {
     const item = equipment.find((e) => e.id === id);
-    return sum + (item?.stats.armorClass ?? 0);
+    if (!item) return sum;
+    const acStats = item.stats.filter((s) => s.type === 'armor-class');
+    const acTotal = acStats.reduce((acSum, s) => {
+      const numericValue = typeof s.value === 'number' ? s.value : Number(s.value);
+      return Number.isNaN(numericValue) ? acSum : acSum + numericValue;
+    }, 0);
+    return sum + acTotal;
   }, 0);
   return 10 + dexBonus + equipBonus;
 }
@@ -85,6 +96,7 @@ export function buildCompleteness(build: Build) {
   return {
     race: Boolean(build.raceId),
     class: Boolean(build.classId),
+    subclass: Boolean(build.subclassId),
     abilities: pointsUsed,
     feats: build.featIds.length > 0,
     spells: build.spellIds.length > 0,

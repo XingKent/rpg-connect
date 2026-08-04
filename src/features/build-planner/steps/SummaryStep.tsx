@@ -69,7 +69,7 @@ export function SummaryStep() {
           id="build-name"
           value={draft.name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="ex.: Moon Druid do Guilherme"
+          placeholder="ex.: Druida da Lua"
           className="focus-ring mt-2 w-full rounded-sm border border-border-ember bg-surface-inset px-3 py-2 font-display text-lg text-ink placeholder:text-ink-faint"
         />
 
