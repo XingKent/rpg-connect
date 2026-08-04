@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Cinzel', serif;
+  --font-body: 'Spectral', serif;
+  --font-data: 'Space Grotesk', sans-serif;
+
+  --color-void: #14110d;
+  --color-surface: #1e1911;
+  --color-surface-raised: #292116;
+  --color-surface-inset: #16130d;
+  --color-border-ember: #4a3b24;
+  --color-border-ember-bright: #6b5636;
+  --color-gold: #c9a15c;
+  --color-gold-bright: #e8c77e;
+  --color-gold-dim: #8a713f;
+  --color-crimson: #8b2635;
+  --color-crimson-bright: #b5384a;
+  --color-emerald: #4a7856;
+  --color-emerald-bright: #66a077;
+  --color-ink: #ede3ce;
+  --color-ink-dim: #a89a7d;
+  --color-ink-faint: #6f6650;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(201, 161, 92, 0.08), transparent),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.012) 0px,
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+}
+
+::selection {
+  background: var(--color-gold-dim);
+  color: var(--color-void);
+}
+
+* {
+  scrollbar-color: var(--color-border-ember) var(--color-surface);
+  scrollbar-width: thin;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.rune-title {
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+}
+
+.parchment-panel {
+  background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-inset) 100%);
+  border: 1px solid var(--color-border-ember);
+  box-shadow:
+    0 1px 0 0 rgba(232, 199, 126, 0.05) inset,
+    0 12px 24px -12px rgba(0, 0, 0, 0.6);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-gold-bright);
+  outline-offset: 2px;
+}
