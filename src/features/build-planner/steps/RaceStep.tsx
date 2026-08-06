@@ -1,7 +1,7 @@
 import { races } from '@/data/races';
 import { SelectCard } from '@/components/ui/SelectCard';
 import { Button } from '@/components/ui/Button';
-import { useBuildStore } from '@/store/buildStore';
+import { useBuildStore } from '@/features/build-planner/store/buildStore';
 
 export function RaceStep() {
   const draft = useBuildStore((s) => s.draft);

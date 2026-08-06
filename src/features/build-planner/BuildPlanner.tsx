@@ -1,8 +1,8 @@
 import { useState, type ComponentType } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { StepRail, type StepDef } from '@/components/StepRail';
-import { useBuildStore } from '@/store/buildStore';
-import { buildCompleteness } from '@/lib/buildCalculations';
+import { useBuildStore } from '@/features/build-planner/store/buildStore';
+import { buildCompleteness } from '@/features/build-planner/lib/buildCalculations';
 import { Button } from '@/components/ui/Button';
 import { RaceStep } from './steps/RaceStep';
 import { ClassStep } from './steps/ClassStep';

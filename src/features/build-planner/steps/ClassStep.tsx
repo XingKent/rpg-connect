@@ -1,7 +1,7 @@
 import { classes } from '@/data/classes';
 import { SelectCard } from '@/components/ui/SelectCard';
 import { Button } from '@/components/ui/Button';
-import { useBuildStore } from '@/store/buildStore';
+import { useBuildStore } from '@/features/build-planner/store/buildStore';
 
 export function ClassStep() {
   const draft = useBuildStore((s) => s.draft);

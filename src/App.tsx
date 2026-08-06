@@ -1,36 +1,14 @@
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+import { Navbar } from '@/components/Navbar';
 import { Home } from '@/pages/Home';
-import { SavedBuilds } from '@/pages/SavedBuilds';
-import { SharedBuildView } from '@/pages/SharedBuildView';
+import { SavedBuilds } from '@/features/build-planner/pages/SavedBuilds';
+import { SharedBuildView } from '@/features/build-planner/pages/SharedBuildView';
 import { BuildPlanner } from '@/features/build-planner/BuildPlanner';
-
-function Header() {
-  const location = useLocation();
-  const isHome = location.pathname === '/';
-  if (isHome) return null;
-  return (
-    <header className="border-b border-border-ember bg-surface/60 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6">
-        <Link to="/" className="rune-title text-sm tracking-widest text-gold-bright">
-          BG3 COMPANION
-        </Link>
-        <nav className="flex gap-4 font-data text-xs uppercase tracking-[0.1em] text-ink-dim">
-          <Link to="/build-planner" className="hover:text-gold-bright">
-            Build Planner
-          </Link>
-          <Link to="/builds" className="hover:text-gold-bright">
-            Minhas builds
-          </Link>
-        </nav>
-      </div>
-    </header>
-  );
-}
 
 function App() {
   return (
     <div className="min-h-screen">
-      <Header />
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/build-planner" element={<BuildPlanner />} />

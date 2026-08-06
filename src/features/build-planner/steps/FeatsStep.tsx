@@ -1,7 +1,7 @@
 import { feats } from '@/data/feats';
 import { SelectCard } from '@/components/ui/SelectCard';
 import { Button } from '@/components/ui/Button';
-import { useBuildStore, FEAT_LIMIT } from '@/store/buildStore';
+import { useBuildStore, FEAT_LIMIT } from '@/features/build-planner/store/buildStore';
 
 export function FeatsStep() {
   const draft = useBuildStore((s) => s.draft);

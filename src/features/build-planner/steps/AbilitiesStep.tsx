@@ -1,9 +1,14 @@
 import type { AbilityKey } from '@/types/bg3';
-import { AbilityGauge } from '@/components/AbilityGauge';
+import { AbilityGauge } from '@/features/build-planner/components/AbilityGauge';
 import { Button } from '@/components/ui/Button';
-import { useBuildStore } from '@/store/buildStore';
-import { canDecrease, canIncrease, pointsRemaining, POINT_BUY_BUDGET } from '@/lib/pointBuy';
-import { racialBonuses } from '@/lib/buildCalculations';
+import { useBuildStore } from '@/features/build-planner/store/buildStore';
+import {
+  canDecrease,
+  canIncrease,
+  pointsRemaining,
+  POINT_BUY_BUDGET,
+} from '@/features/build-planner/lib/pointBuy';
+import { racialBonuses } from '@/features/build-planner/lib/buildCalculations';
 
 const ORDER: AbilityKey[] = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 

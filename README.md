@@ -46,17 +46,43 @@ npm run dev       # http://localhost:5173
 
 ## Estrutura
 
+O projeto está organizado por **features**, já pensando nas 8 partes do roadmap completo. Cada parte futura ganha sua própria pasta em `features/`, mesmo antes de ser implementada — hoje elas têm só um `README.md` marcando o que vai entrar ali.
+
 ```
 src/
-  components/         # UI genérica (Button, SelectCard, StepRail, AbilityGauge)
-  data/                # Dataset de raças, classes, talentos, magias, equipamentos
+  App.tsx                  # Rotas + Navbar
+  components/            # UI genérica reaproveitável entre features (Button, SelectCard, StepRail, Navbar)
+  config/
+    roadmap.ts            # Lista as 8 partes do projeto, usada pela Navbar (status: pronto/atual/em breve)
+  data/                    # Dataset compartilhado do jogo (raças, classes, talentos, magias, equipamentos)
   features/
-    build-planner/     # Orquestrador das etapas + cada Step (Race, Class, ...)
-  lib/                 # point-buy, cálculo de bônus finais, encode/decode de share
-  pages/               # Home, Minhas Builds, Build Compartilhada
-  store/               # Zustand (draft + builds salvas)
-  types/               # Tipos compartilhados (pensados já para espelhar futuros models Django)
+    build-planner/         # Parte 1 — completa
+      components/          # UI específica do planner (AbilityGauge)
+      lib/                 # point-buy, cálculo de bônus finais, encode/decode de share
+      pages/                # Minhas Builds, Build Compartilhada
+      steps/                # Cada etapa do fluxo (Race, Class, Subclass, Abilities...)
+      store/                # Zustand (draft + builds salvas)
+      BuildPlanner.tsx      # Orquestrador das etapas
+    wiki/                   # Parte 2 — planejado (só README por enquanto)
+    quest-tracker/          # Parte 3 — planejado
+    companion-approval-tracker/  # Parte 4 — planejado
+    interactive-map/        # Parte 5 — planejado
+    combat-simulator/       # Parte 6 — planejado
+    loot-finder/             # Parte 7 — planejado
+    achievement-tracker/    # Parte 8 — planejado
+  pages/
+    Home.tsx                # Landing page do site (nível de app, não de feature)
+  types/
+    bg3.ts                   # Tipos de domínio compartilhados (Race, CharClass, Equipment, Build...)
+  test/
+    setup.ts                 # Bootstrap do Vitest
 ```
+
+**Regra geral**: se o código só faz sentido dentro de uma parte específica (ex.: cálculo de point-buy, store de build), ele mora em `features/<parte>/`. Se é reaproveitado por várias partes (tipos de domínio, dataset do jogo, componentes de UI genéricos), fica nas pastas de nível superior (`types/`, `data/`, `components/`).
+
+### Navbar e roadmap
+
+A navbar (`components/Navbar.tsx`) tem um menu "Roteiro" que mostra as 8 partes do projeto com status (pronto / em construção / em breve), lendo de `config/roadmap.ts`. As partes ainda não implementadas aparecem com cadeado e não são clicáveis — para "ativar" uma parte nova, basta adicionar sua rota em `App.tsx` e trocar o `status`/`path` correspondente em `config/roadmap.ts`.
 
 ## Roadmap (próximas fases)
 

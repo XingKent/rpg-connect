@@ -6,9 +6,9 @@ import { feats } from '@/data/feats';
 import { spells } from '@/data/spells';
 import { equipment } from '@/data/equipment';
 import { ABILITY_LABELS, type AbilityKey } from '@/types/bg3';
-import { useBuildStore } from '@/store/buildStore';
-import { finalScores, finalModifiers, baseArmorClass } from '@/lib/buildCalculations';
-import { encodeBuildForShare } from '@/lib/shareBuild';
+import { useBuildStore } from '@/features/build-planner/store/buildStore';
+import { finalScores, finalModifiers, baseArmorClass } from '@/features/build-planner/lib/buildCalculations';
+import { encodeBuildForShare } from '@/features/build-planner/lib/shareBuild';
 import { Button } from '@/components/ui/Button';
 
 const ORDER: AbilityKey[] = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
@@ -74,7 +74,7 @@ export function SummaryStep() {
           id="build-name"
           value={draft.name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="ex.: Moon Druid do Guilherme"
+          placeholder="ex.: Guerreiro da Luz"
           className="focus-ring mt-2 w-full rounded-sm border border-border-ember bg-surface-inset px-3 py-2 font-display text-lg text-ink placeholder:text-ink-faint"
         />
 

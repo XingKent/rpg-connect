@@ -8,7 +8,7 @@ import {
 } from '@/types/bg3';
 import { SelectCard } from '@/components/ui/SelectCard';
 import { Button } from '@/components/ui/Button';
-import { useBuildStore } from '@/store/buildStore';
+import { useBuildStore } from '@/features/build-planner/store/buildStore';
 
 function formatStat(stat: Equipment['stats'][number]): string {
   const label = EQUIPMENT_STAT_LABELS[stat.type];

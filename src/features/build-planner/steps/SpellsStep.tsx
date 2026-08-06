@@ -1,7 +1,7 @@
 import { spells } from '@/data/spells';
 import { SelectCard } from '@/components/ui/SelectCard';
 import { Button } from '@/components/ui/Button';
-import { useBuildStore } from '@/store/buildStore';
+import { useBuildStore } from '@/features/build-planner/store/buildStore';
 
 export function SpellsStep() {
   const draft = useBuildStore((s) => s.draft);
