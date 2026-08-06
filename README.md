@@ -46,7 +46,7 @@ npm run dev       # http://localhost:5173
 
 ## Estrutura
 
-O projeto está organizado por **features**, já pensando nas 8 partes do roadmap completo. Cada parte futura ganha sua própria pasta em `features/`, mesmo antes de ser implementada — hoje elas têm só um `README.md` marcando o que vai entrar ali.
+O projeto está organizado por **features**, já pensando nas 8 partes do roadmap completo. Cada parte futura ganha sua própria pasta em `features/`, mesmo antes de ser implementada - hoje elas têm só um `README.md` marcando o que vai entrar ali.
 
 ```
 src/
