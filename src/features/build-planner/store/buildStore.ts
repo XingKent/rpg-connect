@@ -2,26 +2,33 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AbilityKey, AbilityScores, Build } from '@/types/bg3';
 import { classes } from '@/data/classes';
+import { feats } from '@/data/feats';
+import { spells } from '@/data/spells';
 import {
   DEFAULT_SCORES,
   canDecrease,
   canIncrease,
   recommendedDistribution,
 } from '@/features/build-planner/lib/pointBuy';
-
-export const FEAT_LIMIT = 3;
+import {
+  clampLevel,
+  featSlotsForLevel,
+  maxSpellLevelForCharacterLevel,
+} from '@/features/build-planner/lib/level';
 
 function emptyDraft(): Build {
   const now = new Date().toISOString();
   return {
     id: crypto.randomUUID(),
     name: '',
+    level: 12,
     raceId: '',
     subraceId: undefined,
     classId: '',
     subclassId: undefined,
     abilityScores: { ...DEFAULT_SCORES },
     featIds: [],
+    featAbilityChoices: {},
     spellIds: [],
     equipmentIds: [],
     createdAt: now,
@@ -34,6 +41,7 @@ interface BuildStoreState {
   savedBuilds: Build[];
 
   setName: (name: string) => void;
+  setLevel: (level: number) => void;
   setRace: (raceId: string, subraceId?: string) => void;
   clearRace: () => void;
   setClass: (classId: string) => void;
@@ -46,6 +54,7 @@ interface BuildStoreState {
   applyRecommendedAbilities: () => void;
   toggleFeat: (featId: string) => void;
   clearFeats: () => void;
+  toggleFeatAbilityChoice: (featId: string, ability: AbilityKey) => void;
   toggleSpell: (spellId: string) => void;
   clearSpells: () => void;
   toggleEquipment: (equipmentId: string) => void;
@@ -67,6 +76,42 @@ export const useBuildStore = create<BuildStoreState>()(
       savedBuilds: [],
 
       setName: (name) => set((s) => ({ draft: { ...s.draft, name, ...touch() } })),
+
+      setLevel: (level) =>
+        set((s) => {
+          const clamped = clampLevel(level);
+
+          // Trim feats down to the new slot count (drop the most recently added first).
+          const featLimit = featSlotsForLevel(clamped);
+          const featIds = s.draft.featIds.slice(0, featLimit);
+          const featAbilityChoices = Object.fromEntries(
+            Object.entries(s.draft.featAbilityChoices).filter(([id]) => featIds.includes(id))
+          );
+
+          // Drop spells the character is no longer high-level enough to know.
+          const maxSpellLevel = maxSpellLevelForCharacterLevel(clamped);
+          const spellIds = s.draft.spellIds.filter((id) => {
+            const spell = spells.find((sp) => sp.id === id);
+            return spell ? spell.level <= maxSpellLevel : false;
+          });
+
+          // Unset the subclass if it's no longer available at the new level.
+          const cls = classes.find((c) => c.id === s.draft.classId);
+          const sub = cls?.subclasses.find((sc) => sc.id === s.draft.subclassId);
+          const subclassId = sub && sub.levelAvailable > clamped ? undefined : s.draft.subclassId;
+
+          return {
+            draft: {
+              ...s.draft,
+              level: clamped,
+              featIds,
+              featAbilityChoices,
+              spellIds,
+              subclassId,
+              ...touch(),
+            },
+          };
+        }),
 
       setRace: (raceId, subraceId) => set((s) => ({ draft: { ...s.draft, raceId, subraceId, ...touch() } })),
 
@@ -127,12 +172,38 @@ export const useBuildStore = create<BuildStoreState>()(
       toggleFeat: (featId) =>
         set((s) => {
           const has = s.draft.featIds.includes(featId);
-          if (!has && s.draft.featIds.length >= FEAT_LIMIT) return s;
+          const limit = featSlotsForLevel(s.draft.level);
+          if (!has && s.draft.featIds.length >= limit) return s;
           const featIds = has ? s.draft.featIds.filter((f) => f !== featId) : [...s.draft.featIds, featId];
-          return { draft: { ...s.draft, featIds, ...touch() } };
+          const featAbilityChoices = { ...s.draft.featAbilityChoices };
+          if (has) delete featAbilityChoices[featId];
+          return { draft: { ...s.draft, featIds, featAbilityChoices, ...touch() } };
         }),
 
-      clearFeats: () => set((s) => ({ draft: { ...s.draft, featIds: [], ...touch() } })),
+      clearFeats: () =>
+        set((s) => ({ draft: { ...s.draft, featIds: [], featAbilityChoices: {}, ...touch() } })),
+
+      toggleFeatAbilityChoice: (featId, ability) =>
+        set((s) => {
+          const feat = feats.find((f) => f.id === featId);
+          if (!feat?.abilityChoice) return s;
+          const current = s.draft.featAbilityChoices[featId] ?? [];
+          const has = current.includes(ability);
+          let next: AbilityKey[];
+          if (has) {
+            next = current.filter((a) => a !== ability);
+          } else {
+            if (current.length >= feat.abilityChoice.picks) return s;
+            next = [...current, ability];
+          }
+          return {
+            draft: {
+              ...s.draft,
+              featAbilityChoices: { ...s.draft.featAbilityChoices, [featId]: next },
+              ...touch(),
+            },
+          };
+        }),
 
       toggleSpell: (spellId) =>
         set((s) => {

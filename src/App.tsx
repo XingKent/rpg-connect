@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { Navbar } from '@/components/Navbar';
+import { DiceRoller } from '@/components/DiceRoller';
 import { Home } from '@/pages/Home';
 import { SavedBuilds } from '@/features/build-planner/pages/SavedBuilds';
 import { SharedBuildView } from '@/features/build-planner/pages/SharedBuildView';
@@ -15,6 +16,7 @@ function App() {
         <Route path="/builds" element={<SavedBuilds />} />
         <Route path="/build/:code" element={<SharedBuildView />} />
       </Routes>
+      <DiceRoller />
     </div>
   );
 }

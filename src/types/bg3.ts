@@ -44,11 +44,20 @@ export interface CharClass {
   subclasses: Subclass[];
 }
 
+export interface FeatAbilityChoice {
+  /** How many different abilities the player must pick. */
+  picks: number;
+  /** Bonus applied to each picked ability. */
+  amount: number;
+}
+
 export interface Feat {
   id: string;
   name: string;
   description: string;
   abilityBonus?: Partial<AbilityScores>;
+  /** Present when picking this feat requires an extra sub-step (e.g. choosing which abilities to raise). */
+  abilityChoice?: FeatAbilityChoice;
 }
 
 export interface Spell {
@@ -157,12 +166,15 @@ export const EQUIPMENT_ACTION_COOLDOWN_LABELS: Record<EquipmentActionCooldown, s
 export interface Build {
   id: string;
   name: string;
+  level: number;
   raceId: string;
   subraceId?: string;
   classId: string;
   subclassId?: string;
   abilityScores: AbilityScores;
   featIds: string[];
+  /** Chosen abilities per feat, for feats whose abilityChoice requires an extra pick (featId -> ability keys). */
+  featAbilityChoices: Record<string, AbilityKey[]>;
   spellIds: string[];
   equipmentIds: string[];
   createdAt: string;
