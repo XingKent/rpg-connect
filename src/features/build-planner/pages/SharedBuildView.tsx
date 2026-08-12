@@ -45,6 +45,13 @@ export function SharedBuildView() {
   const mods = finalModifiers(build);
   const ac = baseArmorClass(build);
   const chosenFeats = feats.filter((f) => build.featIds.includes(f.id));
+  const featLabels = chosenFeats.map((f) => {
+    if (!f.abilityChoice) return f.name;
+    const chosen = build.featAbilityChoices[f.id] ?? [];
+    if (chosen.length === 0) return f.name;
+    const detail = chosen.map((a) => `${ABILITY_LABELS[a]} +${f.abilityChoice!.amount}`).join(', ');
+    return `${f.name} (${detail})`;
+  });
   const chosenSpells = spells.filter((s) => build.spellIds.includes(s.id));
   const chosenEquipment = equipment.filter((e) => build.equipmentIds.includes(e.id));
 
@@ -62,7 +69,7 @@ export function SharedBuildView() {
           </span>
           <h1 className="rune-title text-2xl text-gold-bright">{build.name || 'Build sem nome'}</h1>
           <p className="mt-1 font-data text-sm text-ink-dim">
-            {race ? `${race.name}${subrace ? ` (${subrace.name})` : ''}` : '—'} ·{' '}
+            Nível {build.level} · {race ? `${race.name}${subrace ? ` (${subrace.name})` : ''}` : '—'} ·{' '}
             {cls ? `${cls.name}${subclass ? ` — ${subclass.name}` : ''}` : '—'}
           </p>
         </div>
@@ -90,7 +97,7 @@ export function SharedBuildView() {
         <div className="font-display text-2xl text-gold-bright">{ac}</div>
       </div>
 
-      <ShareList title="Talentos" items={chosenFeats.map((f) => f.name)} />
+      <ShareList title="Talentos" items={featLabels} />
       <ShareList title="Magias" items={chosenSpells.map((s) => s.name)} />
       <ShareList title="Equipamentos" items={chosenEquipment.map((e) => e.name)} />
     </div>

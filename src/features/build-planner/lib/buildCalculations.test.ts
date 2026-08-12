@@ -8,12 +8,14 @@ function makeBuild(overrides: Partial<Build> = {}): Build {
   return {
     id: 'test-id',
     name: 'Test Build',
+    level: 12,
     raceId: 'wood-elf',
     subraceId: 'wood-elf-sub',
     classId: 'druid',
     subclassId: 'circle-of-the-moon',
     abilityScores: { ...DEFAULT_SCORES },
     featIds: [],
+    featAbilityChoices: {},
     spellIds: [],
     equipmentIds: [],
     createdAt: now,
@@ -63,13 +65,36 @@ describe('buildCalculations', () => {
     expect(baseArmorClass(build)).toBe(11);
   });
 
-  it('reads ability bonuses from equipment stats entries (e.g. the arcane staff)', () => {
+  it('reads ability bonuses from equipment stats entries (e.g. the headband of intellect)', () => {
     const build = makeBuild({
       raceId: 'human',
       abilityScores: { ...DEFAULT_SCORES, int: 14 },
-      equipmentIds: ['staff-of-spellpower'],
+      equipmentIds: ['headband-of-intellect'],
     });
-    // Human +1 INT -> 15, staff adds +1 INT via its stats array -> 16
-    expect(finalScores(build).int).toBe(16);
+    // Human +1 INT -> 15, headband adds +2 INT via its stats array -> 17
+    expect(finalScores(build).int).toBe(17);
+  });
+
+  it('applies the chosen abilities for feats with an ability-choice sub-step', () => {
+    const build = makeBuild({
+      raceId: 'human',
+      abilityScores: { ...DEFAULT_SCORES, str: 14, dex: 14 },
+      featIds: ['ability-improvement'],
+      featAbilityChoices: { 'ability-improvement': ['str', 'dex'] },
+    });
+    const scores = finalScores(build);
+    // Human +1 to everything, plus +1 STR and +1 DEX chosen from the feat
+    expect(scores.str).toBe(16);
+    expect(scores.dex).toBe(16);
+  });
+
+  it('ignores an ability-choice feat with no choices made yet', () => {
+    const build = makeBuild({
+      raceId: 'human',
+      abilityScores: { ...DEFAULT_SCORES, str: 14 },
+      featIds: ['ability-improvement'],
+      featAbilityChoices: {},
+    });
+    expect(finalScores(build).str).toBe(15); // only the +1 racial bonus
   });
 });

@@ -32,16 +32,22 @@ export function SubclassStep() {
       </header>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {selectedClass.subclasses.map((sub) => (
-          <SelectCard
-            key={sub.id}
-            eyebrow={`Disponível no nível ${sub.levelAvailable}`}
-            title={sub.name}
-            description={sub.description}
-            selected={draft.subclassId === sub.id}
-            onClick={() => setSubclass(sub.id)}
-          />
-        ))}
+        {selectedClass.subclasses.map((sub) => {
+          const locked = draft.level < sub.levelAvailable;
+          return (
+            <SelectCard
+              key={sub.id}
+              eyebrow={
+                locked ? `🔒 Requer nível ${sub.levelAvailable}` : `Disponível no nível ${sub.levelAvailable}`
+              }
+              title={sub.name}
+              description={sub.description}
+              selected={draft.subclassId === sub.id}
+              disabled={locked}
+              onClick={() => setSubclass(sub.id)}
+            />
+          );
+        })}
       </div>
     </div>
   );

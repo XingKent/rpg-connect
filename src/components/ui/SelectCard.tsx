@@ -6,6 +6,8 @@ interface SelectCardProps {
   selected?: boolean;
   onClick?: () => void;
   eyebrow?: string;
+  /** Optional small badge rendered inline next to the title (e.g. a source tag). */
+  titleBadge?: ReactNode;
   footer?: ReactNode;
   disabled?: boolean;
 }
@@ -16,6 +18,7 @@ export function SelectCard({
   selected,
   onClick,
   eyebrow,
+  titleBadge,
   footer,
   disabled,
 }: SelectCardProps) {
@@ -39,7 +42,10 @@ export function SelectCard({
       {eyebrow && (
         <span className="font-data text-[11px] uppercase tracking-[0.15em] text-ink-faint">{eyebrow}</span>
       )}
-      <span className={`rune-title text-base ${selected ? 'text-gold-bright' : 'text-ink'}`}>{title}</span>
+      <span className="flex flex-wrap items-center gap-2">
+        <span className={`rune-title text-base ${selected ? 'text-gold-bright' : 'text-ink'}`}>{title}</span>
+        {titleBadge}
+      </span>
       {description && <span className="text-sm leading-snug text-ink-dim">{description}</span>}
       {footer}
     </button>

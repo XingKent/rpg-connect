@@ -9,6 +9,14 @@ export const ABILITY_LABELS: Record<AbilityKey, string> = {
   cha: 'Carisma',
 };
 
+/** Where a piece of content comes from: the open D&D 5e SRD, or something specific to Baldur's Gate 3. */
+export type ContentSource = 'srd' | 'bg3';
+
+export const CONTENT_SOURCE_LABELS: Record<ContentSource, string> = {
+  srd: 'D&D 5e',
+  bg3: 'Baldur\u2019s Gate 3',
+};
+
 export type AbilityScores = Record<AbilityKey, number>;
 
 export interface Subrace {
@@ -44,11 +52,20 @@ export interface CharClass {
   subclasses: Subclass[];
 }
 
+export interface FeatAbilityChoice {
+  /** How many different abilities the player must pick. */
+  picks: number;
+  /** Bonus applied to each picked ability. */
+  amount: number;
+}
+
 export interface Feat {
   id: string;
   name: string;
   description: string;
   abilityBonus?: Partial<AbilityScores>;
+  /** Present when picking this feat requires an extra sub-step (e.g. choosing which abilities to raise). */
+  abilityChoice?: FeatAbilityChoice;
 }
 
 export interface Spell {
@@ -58,6 +75,7 @@ export interface Spell {
   school: string;
   classes: string[];
   description: string;
+  source: ContentSource;
 }
 
 export type EquipmentSlot =
@@ -110,6 +128,7 @@ export interface Equipment {
   bestFor?: string[];
   stats: EquipmentStat[];
   actions?: EquipmentAction[];
+  source: ContentSource;
 }
 
 const ABILITY_STAT_TO_KEY: Partial<Record<EquipmentStatType, AbilityKey>> = {
@@ -157,12 +176,15 @@ export const EQUIPMENT_ACTION_COOLDOWN_LABELS: Record<EquipmentActionCooldown, s
 export interface Build {
   id: string;
   name: string;
+  level: number;
   raceId: string;
   subraceId?: string;
   classId: string;
   subclassId?: string;
   abilityScores: AbilityScores;
   featIds: string[];
+  /** Chosen abilities per feat, for feats whose abilityChoice requires an extra pick (featId -> ability keys). */
+  featAbilityChoices: Record<string, AbilityKey[]>;
   spellIds: string[];
   equipmentIds: string[];
   createdAt: string;

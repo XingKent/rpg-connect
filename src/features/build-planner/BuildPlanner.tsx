@@ -4,6 +4,7 @@ import { StepRail, type StepDef } from '@/components/StepRail';
 import { useBuildStore } from '@/features/build-planner/store/buildStore';
 import { buildCompleteness } from '@/features/build-planner/lib/buildCalculations';
 import { Button } from '@/components/ui/Button';
+import { LevelControl } from './components/LevelControl';
 import { RaceStep } from './steps/RaceStep';
 import { ClassStep } from './steps/ClassStep';
 import { SubclassStep } from './steps/SubclassStep';
@@ -95,6 +96,9 @@ export function BuildPlanner() {
           <Button variant="ghost" className="w-full" onClick={handleNewBuild}>
             + Nova build
           </Button>
+        </div>
+        <div className="mb-4">
+          <LevelControl />
         </div>
         <StepRail steps={steps} activeKey={active} onSelect={(key) => setActive(key as StepKey)} />
       </aside>

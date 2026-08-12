@@ -33,9 +33,19 @@ export function featBonuses(build: Build): Partial<AbilityScores> {
   const combined: Partial<AbilityScores> = {};
   for (const featId of build.featIds) {
     const feat = feats.find((f) => f.id === featId);
-    if (!feat?.abilityBonus) continue;
-    for (const key of ABILITY_KEYS) {
-      if (feat.abilityBonus[key]) combined[key] = (combined[key] ?? 0) + (feat.abilityBonus[key] ?? 0);
+    if (!feat) continue;
+
+    if (feat.abilityBonus) {
+      for (const key of ABILITY_KEYS) {
+        if (feat.abilityBonus[key]) combined[key] = (combined[key] ?? 0) + (feat.abilityBonus[key] ?? 0);
+      }
+    }
+
+    if (feat.abilityChoice) {
+      const chosen = build.featAbilityChoices[featId] ?? [];
+      for (const key of chosen) {
+        combined[key] = (combined[key] ?? 0) + feat.abilityChoice.amount;
+      }
     }
   }
   return combined;

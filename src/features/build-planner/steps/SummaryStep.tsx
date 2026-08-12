@@ -31,6 +31,13 @@ export function SummaryStep() {
   const ac = baseArmorClass(draft);
 
   const chosenFeats = feats.filter((f) => draft.featIds.includes(f.id));
+  const featLabels = chosenFeats.map((f) => {
+    if (!f.abilityChoice) return f.name;
+    const chosen = draft.featAbilityChoices[f.id] ?? [];
+    if (chosen.length === 0) return f.name;
+    const detail = chosen.map((a) => `${ABILITY_LABELS[a]} +${f.abilityChoice!.amount}`).join(', ');
+    return `${f.name} (${detail})`;
+  });
   const chosenSpells = spells.filter((s) => draft.spellIds.includes(s.id));
   const chosenEquipment = equipment.filter((e) => draft.equipmentIds.includes(e.id));
 
@@ -74,11 +81,15 @@ export function SummaryStep() {
           id="build-name"
           value={draft.name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="ex.: Guerreiro da Luz"
+          placeholder="ex.: Moon Druid"
           className="focus-ring mt-2 w-full rounded-sm border border-border-ember bg-surface-inset px-3 py-2 font-display text-lg text-ink placeholder:text-ink-faint"
         />
 
-        <div className="mt-4 grid grid-cols-2 gap-2 font-data text-sm text-ink-dim sm:grid-cols-4">
+        <div className="mt-4 grid grid-cols-2 gap-2 font-data text-sm text-ink-dim sm:grid-cols-5">
+          <div>
+            <div className="text-[11px] uppercase tracking-[0.15em] text-ink-faint">Nível</div>
+            <div className="text-gold-bright">{draft.level}</div>
+          </div>
           <div>
             <div className="text-[11px] uppercase tracking-[0.15em] text-ink-faint">Raça</div>
             <div className="text-ink">
@@ -116,7 +127,7 @@ export function SummaryStep() {
         ))}
       </div>
 
-      <SummaryList title="Talentos" items={chosenFeats.map((f) => f.name)} />
+      <SummaryList title="Talentos" items={featLabels} />
       <SummaryList title="Magias" items={chosenSpells.map((s) => s.name)} />
       <SummaryList title="Equipamentos" items={chosenEquipment.map((e) => e.name)} />
 

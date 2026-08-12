@@ -62,7 +62,7 @@ export function SavedBuilds() {
                 <div>
                   <div className="rune-title text-base text-ink">{build.name || 'Build sem nome'}</div>
                   <div className="font-data text-xs text-ink-dim">
-                    {race?.name ?? '—'} · {cls?.name ?? '—'}
+                    Nível {build.level} · {race?.name ?? '—'} · {cls?.name ?? '—'}
                   </div>
                 </div>
                 <div className="flex gap-2">
