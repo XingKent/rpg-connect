@@ -5,6 +5,8 @@ import {
   EQUIPMENT_STAT_LABELS,
   EQUIPMENT_ACTION_TYPE_LABELS,
   EQUIPMENT_ACTION_COOLDOWN_LABELS,
+  EQUIPMENT_SLOT_LABELS,
+  ARMOR_CATEGORY_LABELS,
   type Equipment,
 } from '@/types/bg3';
 import { SelectCard } from '@/components/ui/SelectCard';
@@ -92,6 +94,11 @@ export function EquipmentStep() {
         </span>
       </div>
 
+      <p className="font-data text-[11px] text-ink-faint">
+        Equipar um novo item substitui automaticamente o mais antigo do mesmo slot. Limites: armas e anéis até
+        2 peças; os demais slots, 1 peça cada.
+      </p>
+
       {pageItems.length === 0 ? (
         <div className="parchment-panel rounded-sm p-6 text-center text-sm text-ink-dim">
           Nenhum equipamento encontrado para "{search}".
@@ -101,7 +108,7 @@ export function EquipmentStep() {
           {pageItems.map((item) => (
             <SelectCard
               key={item.id}
-              eyebrow={RARITY_LABELS[item.rarity]}
+              eyebrow={`${RARITY_LABELS[item.rarity]} · ${EQUIPMENT_SLOT_LABELS[item.slot]}`}
               title={item.name}
               titleBadge={<SourceBadge source={item.source} />}
               description={item.description}
@@ -109,8 +116,13 @@ export function EquipmentStep() {
               onClick={() => toggleEquipment(item.id)}
               footer={
                 <div>
-                  {item.stats.length > 0 && (
+                  {(item.armor || item.stats.length > 0) && (
                     <ul className="mt-2 flex flex-wrap gap-1.5">
+                      {item.armor && (
+                        <li className="rounded-sm border border-gold-bright/40 bg-gold/10 px-1.5 py-0.5 text-[11px] text-gold-bright">
+                          CA base {item.armor.baseArmorClass} ({ARMOR_CATEGORY_LABELS[item.armor.category]})
+                        </li>
+                      )}
                       {item.stats.map((stat, i) => (
                         <li
                           key={i}

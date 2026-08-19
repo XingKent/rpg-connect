@@ -7,7 +7,12 @@ import { spells } from '@/data/spells';
 import { equipment } from '@/data/equipment';
 import { ABILITY_LABELS, type AbilityKey } from '@/types/bg3';
 import { useBuildStore } from '@/features/build-planner/store/buildStore';
-import { finalScores, finalModifiers, baseArmorClass } from '@/features/build-planner/lib/buildCalculations';
+import {
+  finalScores,
+  finalModifiers,
+  baseArmorClass,
+  hasIncompleteFeatChoices,
+} from '@/features/build-planner/lib/buildCalculations';
 import { encodeBuildForShare } from '@/features/build-planner/lib/shareBuild';
 import { Button } from '@/components/ui/Button';
 
@@ -29,6 +34,7 @@ export function SummaryStep() {
   const scores = finalScores(draft);
   const mods = finalModifiers(draft);
   const ac = baseArmorClass(draft);
+  const incompleteFeatChoice = hasIncompleteFeatChoices(draft);
 
   const chosenFeats = feats.filter((f) => draft.featIds.includes(f.id));
   const featLabels = chosenFeats.map((f) => {
@@ -132,13 +138,16 @@ export function SummaryStep() {
       <SummaryList title="Equipamentos" items={chosenEquipment.map((e) => e.name)} />
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button onClick={handleSave} disabled={!draft.name || !draft.raceId || !draft.classId}>
+        <Button
+          onClick={handleSave}
+          disabled={!draft.name || !draft.raceId || !draft.classId || incompleteFeatChoice}
+        >
           {justSaved ? 'Build salva ✓' : 'Salvar build'}
         </Button>
         <Button
           variant="ghost"
           onClick={handleShare}
-          disabled={!draft.name || !draft.raceId || !draft.classId}
+          disabled={!draft.name || !draft.raceId || !draft.classId || incompleteFeatChoice}
         >
           Compartilhar por link
         </Button>
@@ -151,6 +160,13 @@ export function SummaryStep() {
           </span>
         )}
       </div>
+
+      {incompleteFeatChoice && (
+        <p className="text-xs text-crimson-bright">
+          Complete a escolha de atributos dos talentos selecionados (etapa Talentos) antes de salvar ou
+          compartilhar.
+        </p>
+      )}
 
       {shareUrl && (
         <div className="parchment-panel flex flex-wrap items-center justify-between gap-3 rounded-sm p-3">

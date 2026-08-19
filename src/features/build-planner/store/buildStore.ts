@@ -1,9 +1,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AbilityKey, AbilityScores, Build } from '@/types/bg3';
+import { EQUIPMENT_SLOT_CAPACITY } from '@/types/bg3';
 import { classes } from '@/data/classes';
 import { feats } from '@/data/feats';
 import { spells } from '@/data/spells';
+import { equipment } from '@/data/equipment';
 import {
   DEFAULT_SCORES,
   canDecrease,
@@ -219,10 +221,33 @@ export const useBuildStore = create<BuildStoreState>()(
       toggleEquipment: (equipmentId) =>
         set((s) => {
           const has = s.draft.equipmentIds.includes(equipmentId);
-          const equipmentIds = has
-            ? s.draft.equipmentIds.filter((e) => e !== equipmentId)
-            : [...s.draft.equipmentIds, equipmentId];
-          return { draft: { ...s.draft, equipmentIds, ...touch() } };
+
+          if (has) {
+            return {
+              draft: {
+                ...s.draft,
+                equipmentIds: s.draft.equipmentIds.filter((e) => e !== equipmentId),
+                ...touch(),
+              },
+            };
+          }
+
+          const item = equipment.find((e) => e.id === equipmentId);
+          if (!item) return s;
+
+          const capacity = EQUIPMENT_SLOT_CAPACITY[item.slot];
+          const sameSlotIds = s.draft.equipmentIds.filter(
+            (id) => equipment.find((e) => e.id === id)?.slot === item.slot
+          );
+
+          let equipmentIds = s.draft.equipmentIds;
+          if (sameSlotIds.length >= capacity) {
+            // Slot is full: unequip the oldest item(s) of this slot to make room.
+            const toDrop = sameSlotIds.slice(0, sameSlotIds.length - capacity + 1);
+            equipmentIds = equipmentIds.filter((id) => !toDrop.includes(id));
+          }
+
+          return { draft: { ...s.draft, equipmentIds: [...equipmentIds, equipmentId], ...touch() } };
         }),
 
       clearEquipment: () => set((s) => ({ draft: { ...s.draft, equipmentIds: [], ...touch() } })),

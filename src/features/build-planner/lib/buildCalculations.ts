@@ -1,5 +1,5 @@
 import { equipmentStatAbilityKey } from '@/types/bg3';
-import type { AbilityKey, AbilityScores, Build } from '@/types/bg3';
+import type { AbilityKey, AbilityScores, Build, Equipment } from '@/types/bg3';
 import { races } from '@/data/races';
 import { classes } from '@/data/classes';
 import { feats } from '@/data/feats';
@@ -87,10 +87,28 @@ export function finalModifiers(build: Build): Record<AbilityKey, number> {
 
 export function baseArmorClass(build: Build): number {
   const mods = finalModifiers(build);
-  const dexBonus = mods.dex;
-  const equipBonus = build.equipmentIds.reduce((sum, id) => {
-    const item = equipment.find((e) => e.id === id);
-    if (!item) return sum;
+  const dexMod = mods.dex;
+
+  const equippedItems = build.equipmentIds
+    .map((id) => equipment.find((e) => e.id === id))
+    .filter((item): item is Equipment => Boolean(item));
+
+  const armorItem = equippedItems.find((item) => item.slot === 'armor' && item.armor);
+
+  let base: number;
+  let dexContribution: number;
+  if (armorItem?.armor) {
+    base = armorItem.armor.baseArmorClass;
+    if (armorItem.armor.category === 'light') dexContribution = dexMod;
+    else if (armorItem.armor.category === 'medium') dexContribution = Math.min(dexMod, 2);
+    else dexContribution = 0; // heavy armor ignores Dexterity
+  } else {
+    base = 10; // unarmored
+    dexContribution = dexMod;
+  }
+
+  // Flat AC bonuses from any equipped item (rings, cloaks, magic enhancement on armor itself, etc.)
+  const flatBonus = equippedItems.reduce((sum, item) => {
     const acStats = item.stats.filter((s) => s.type === 'armor-class');
     const acTotal = acStats.reduce((acSum, s) => {
       const numericValue = typeof s.value === 'number' ? s.value : Number(s.value);
@@ -98,7 +116,18 @@ export function baseArmorClass(build: Build): number {
     }, 0);
     return sum + acTotal;
   }, 0);
-  return 10 + dexBonus + equipBonus;
+
+  return base + dexContribution + flatBonus;
+}
+
+/** True if any selected feat with an ability-choice sub-step hasn't had all its picks made yet. */
+export function hasIncompleteFeatChoices(build: Build): boolean {
+  return build.featIds.some((featId) => {
+    const feat = feats.find((f) => f.id === featId);
+    if (!feat?.abilityChoice) return false;
+    const chosen = build.featAbilityChoices[featId] ?? [];
+    return chosen.length < feat.abilityChoice.picks;
+  });
 }
 
 export function buildCompleteness(build: Build) {
@@ -108,7 +137,7 @@ export function buildCompleteness(build: Build) {
     class: Boolean(build.classId),
     subclass: Boolean(build.subclassId),
     abilities: pointsUsed,
-    feats: build.featIds.length > 0,
+    feats: build.featIds.length > 0 && !hasIncompleteFeatChoices(build),
     spells: build.spellIds.length > 0,
     equipment: build.equipmentIds.length > 0,
   };

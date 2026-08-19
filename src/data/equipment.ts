@@ -153,6 +153,39 @@ export const equipment: Equipment[] = [
     source: 'srd',
     stats: [{ type: 'spell-attack', value: 1 }],
   },
+  {
+    id: 'studded-leather-armor',
+    name: 'Couro Batido',
+    slot: 'armor',
+    rarity: 'common',
+    act: 1,
+    weight: 5.5,
+    value: 45,
+    image: '',
+    description: 'Armadura leve reforçada com rebites de metal — não atrapalha a agilidade de quem a veste.',
+    location: 'Vendedor da Taverna, Ato 1',
+    bestFor: ['Ladino', 'Bárbaro'],
+    source: 'srd',
+    armor: { category: 'light', baseArmorClass: 12 },
+    stats: [],
+  },
+  {
+    id: 'half-plate-armor',
+    name: 'Meia-Armadura',
+    slot: 'armor',
+    rarity: 'common',
+    act: 1,
+    weight: 20,
+    value: 750,
+    image: '',
+    description:
+      'Placas de metal cobrindo o tronco e os ombros — proteção sólida com alguma liberdade de movimento.',
+    location: 'Ferreiro do Templo, Ato 1',
+    bestFor: ['Guerreiro', 'Clérigo'],
+    source: 'srd',
+    armor: { category: 'medium', baseArmorClass: 15 },
+    stats: [],
+  },
 
   // ---- Exclusivos de Baldur's Gate 3 ----
   {
@@ -196,11 +229,12 @@ export const equipment: Equipment[] = [
     value: 900,
     image: '',
     description:
-      'Forjada no molde de adamantina da Fundição de Grymforge — quase impenetrável a golpes críticos.',
+      'Forjada no molde de adamantina da Fundição de Grymforge — pesada e quase impenetrável a golpes críticos.',
     location: 'Fundição de Grymforge, Ato 1',
     bestFor: ['Guerreiro', 'Bárbaro', 'Clérigo'],
     source: 'bg3',
-    stats: [{ type: 'armor-class', value: 4 }],
+    armor: { category: 'heavy', baseArmorClass: 17 },
+    stats: [],
     actions: [
       {
         name: 'Blindagem contra Críticos',
@@ -256,7 +290,8 @@ export const equipment: Equipment[] = [
     location: 'Ato 3',
     bestFor: ['Guerreiro', 'Bárbaro', 'Clérigo'],
     source: 'bg3',
-    stats: [{ type: 'armor-class', value: 2 }],
+    armor: { category: 'heavy', baseArmorClass: 18 },
+    stats: [],
     actions: [
       {
         name: 'Resistência Infernal',

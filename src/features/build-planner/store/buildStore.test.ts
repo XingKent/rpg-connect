@@ -109,4 +109,39 @@ describe('buildStore', () => {
     toggleFeatAbilityChoice('ability-improvement', 'con'); // ignored, already at 2 picks
     expect(useBuildStore.getState().draft.featAbilityChoices['ability-improvement']).toEqual(['str', 'dex']);
   });
+
+  describe('equipment slot exclusivity', () => {
+    it('auto-replaces the previous item when a single-capacity slot is already full', () => {
+      const { toggleEquipment } = useBuildStore.getState();
+      toggleEquipment('adamantine-splint-armor'); // armor slot, capacity 1
+      toggleEquipment('half-plate-armor'); // should bump the splint armor out
+      const equipmentIds = useBuildStore.getState().draft.equipmentIds;
+      expect(equipmentIds).toContain('half-plate-armor');
+      expect(equipmentIds).not.toContain('adamantine-splint-armor');
+      expect(equipmentIds).toHaveLength(1);
+    });
+
+    it('allows two items in a capacity-2 slot, but bumps the oldest on a third (weapons)', () => {
+      const { toggleEquipment } = useBuildStore.getState();
+      toggleEquipment('flame-tongue-sword');
+      toggleEquipment('sun-blade');
+      expect(useBuildStore.getState().draft.equipmentIds).toEqual(['flame-tongue-sword', 'sun-blade']);
+
+      toggleEquipment('wand-of-the-war-mage'); // third weapon, should bump the flame tongue sword
+      const equipmentIds = useBuildStore.getState().draft.equipmentIds;
+      expect(equipmentIds).not.toContain('flame-tongue-sword');
+      expect(equipmentIds).toContain('sun-blade');
+      expect(equipmentIds).toContain('wand-of-the-war-mage');
+      expect(equipmentIds).toHaveLength(2);
+    });
+
+    it('does not affect items in a different slot', () => {
+      const { toggleEquipment } = useBuildStore.getState();
+      toggleEquipment('adamantine-splint-armor'); // armor
+      toggleEquipment('cloak-of-protection'); // cloak, unrelated slot
+      const equipmentIds = useBuildStore.getState().draft.equipmentIds;
+      expect(equipmentIds).toContain('adamantine-splint-armor');
+      expect(equipmentIds).toContain('cloak-of-protection');
+    });
+  });
 });

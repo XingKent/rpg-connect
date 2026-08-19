@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import type { Build } from '@/types/bg3';
 import { DEFAULT_SCORES } from '@/features/build-planner/lib/pointBuy';
-import { finalScores, baseArmorClass } from '@/features/build-planner/lib/buildCalculations';
+import {
+  finalScores,
+  baseArmorClass,
+  hasIncompleteFeatChoices,
+  buildCompleteness,
+} from '@/features/build-planner/lib/buildCalculations';
 
 function makeBuild(overrides: Partial<Build> = {}): Build {
   const now = new Date().toISOString();
@@ -96,5 +101,73 @@ describe('buildCalculations', () => {
       featAbilityChoices: {},
     });
     expect(finalScores(build).str).toBe(15); // only the +1 racial bonus
+  });
+
+  describe('baseArmorClass with actual armor equipped', () => {
+    it('heavy armor uses its flat base AC and ignores Dexterity entirely', () => {
+      const build = makeBuild({
+        raceId: 'human',
+        abilityScores: { ...DEFAULT_SCORES, dex: 18 }, // huge DEX mod, should not matter
+        equipmentIds: ['adamantine-splint-armor'],
+      });
+      // Heavy armor base AC 17, no Dex contribution, no flat stats on this item
+      expect(baseArmorClass(build)).toBe(17);
+    });
+
+    it('medium armor caps the Dexterity contribution at +2', () => {
+      const build = makeBuild({
+        raceId: 'human',
+        abilityScores: { ...DEFAULT_SCORES, dex: 18 }, // human +1 -> 19 -> mod +4, should cap at +2
+        equipmentIds: ['half-plate-armor'],
+      });
+      // Base 15 + capped Dex (+2) = 17
+      expect(baseArmorClass(build)).toBe(17);
+    });
+
+    it('light armor adds the full Dexterity modifier', () => {
+      const build = makeBuild({
+        raceId: 'human',
+        abilityScores: { ...DEFAULT_SCORES, dex: 14 }, // human +1 -> 15 -> mod +2
+        equipmentIds: ['studded-leather-armor'],
+      });
+      // Base 12 + full Dex (+2) = 14
+      expect(baseArmorClass(build)).toBe(14);
+    });
+
+    it('stacks flat AC accessories (rings/cloaks) on top of worn armor', () => {
+      const build = makeBuild({
+        raceId: 'human',
+        abilityScores: { ...DEFAULT_SCORES, dex: 8 },
+        equipmentIds: ['adamantine-splint-armor', 'ring-of-protection', 'cloak-of-protection'],
+      });
+      // Heavy armor base 17 (no Dex) + ring +1 + cloak +1 = 19
+      expect(baseArmorClass(build)).toBe(19);
+    });
+  });
+
+  describe('hasIncompleteFeatChoices / buildCompleteness', () => {
+    it('flags a build as incomplete when an ability-choice feat has fewer picks than required', () => {
+      const build = makeBuild({
+        featIds: ['ability-improvement'],
+        featAbilityChoices: { 'ability-improvement': ['str'] }, // needs 2 picks, only has 1
+      });
+      expect(hasIncompleteFeatChoices(build)).toBe(true);
+      expect(buildCompleteness(build).feats).toBe(false);
+    });
+
+    it('considers the feats step complete once all picks are made', () => {
+      const build = makeBuild({
+        featIds: ['ability-improvement'],
+        featAbilityChoices: { 'ability-improvement': ['str', 'dex'] },
+      });
+      expect(hasIncompleteFeatChoices(build)).toBe(false);
+      expect(buildCompleteness(build).feats).toBe(true);
+    });
+
+    it('does not flag feats that have no ability choice at all', () => {
+      const build = makeBuild({ featIds: ['alert'] });
+      expect(hasIncompleteFeatChoices(build)).toBe(false);
+      expect(buildCompleteness(build).feats).toBe(true);
+    });
   });
 });

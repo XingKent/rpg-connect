@@ -81,6 +81,37 @@ export interface Spell {
 export type EquipmentSlot =
   'weapon' | 'armor' | 'headwear' | 'cloak' | 'gloves' | 'boots' | 'amulet' | 'ring';
 
+/** How many of this slot can be equipped at once (e.g. two rings, one armor). */
+export const EQUIPMENT_SLOT_CAPACITY: Record<EquipmentSlot, number> = {
+  weapon: 2,
+  armor: 1,
+  headwear: 1,
+  cloak: 1,
+  gloves: 1,
+  boots: 1,
+  amulet: 1,
+  ring: 2,
+};
+
+export const EQUIPMENT_SLOT_LABELS: Record<EquipmentSlot, string> = {
+  weapon: 'Arma',
+  armor: 'Armadura',
+  headwear: 'Elmo',
+  cloak: 'Manto',
+  gloves: 'Luvas',
+  boots: 'Botas',
+  amulet: 'Amuleto',
+  ring: 'Anel',
+};
+
+export type ArmorCategory = 'light' | 'medium' | 'heavy';
+
+export const ARMOR_CATEGORY_LABELS: Record<ArmorCategory, string> = {
+  light: 'Leve',
+  medium: 'Média',
+  heavy: 'Pesada',
+};
+
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'very-rare' | 'legendary';
 
 export type EquipmentStatType =
@@ -126,6 +157,11 @@ export interface Equipment {
   classes?: string[];
   /** Classes/builds that get the most value out of this item. */
   bestFor?: string[];
+  /** Only present for slot === 'armor'. Defines the base AC and how Dexterity applies. */
+  armor?: {
+    category: ArmorCategory;
+    baseArmorClass: number;
+  };
   stats: EquipmentStat[];
   actions?: EquipmentAction[];
   source: ContentSource;
