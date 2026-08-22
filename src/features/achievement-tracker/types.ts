@@ -6,4 +6,6 @@ export interface Achievement {
   name: string;
   description: string;
   category: AchievementCategory;
+  /** Path/URL to the achievement's icon. Leave empty to show a placeholder square. */
+  image?: string;
 }

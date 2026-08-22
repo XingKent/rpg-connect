@@ -4,9 +4,7 @@ import { Button } from '@/components/ui/Button';
 export function Home() {
   return (
     <div className="mx-auto flex min-h-[80vh] w-full max-w-4xl flex-col items-center justify-center px-4 py-16 text-center md:px-6">
-      <span className="font-data text-xs uppercase tracking-[0.3em] text-gold-dim">
-        BG3 Companion
-      </span>
+      <span className="font-data text-xs uppercase tracking-[0.3em] text-gold-dim">BG3 Companion</span>
       <h1 className="rune-title mt-4 text-4xl text-ink md:text-5xl">
         Forje sua <span className="text-gold-bright">build</span> antes da aventura
       </h1>
