@@ -6,6 +6,7 @@ import { spells } from '@/data/spells';
 import { equipment } from '@/data/equipment';
 import { ABILITY_LABELS, type AbilityKey, type Build } from '@/types/bg3';
 import { decodeSharedBuild } from '@/features/build-planner/lib/shareBuild';
+import { normalizeBuild } from '@/features/build-planner/lib/normalizeBuild';
 import { finalScores, finalModifiers, baseArmorClass } from '@/features/build-planner/lib/buildCalculations';
 import { Button } from '@/components/ui/Button';
 import { useBuildStore } from '@/features/build-planner/store/buildStore';
@@ -30,12 +31,12 @@ export function SharedBuildView() {
     );
   }
 
-  const build: Build = {
+  const build: Build = normalizeBuild({
     ...shared,
     id: crypto.randomUUID(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-  };
+  });
 
   const race = races.find((r) => r.id === build.raceId);
   const subrace = race?.subraces?.find((s) => s.id === build.subraceId);

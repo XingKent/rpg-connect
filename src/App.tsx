@@ -6,6 +6,7 @@ import { Home } from '@/pages/Home';
 import { SavedBuilds } from '@/features/build-planner/pages/SavedBuilds';
 import { SharedBuildView } from '@/features/build-planner/pages/SharedBuildView';
 import { BuildPlanner } from '@/features/build-planner/BuildPlanner';
+import { AchievementTracker } from '@/features/achievement-tracker/AchievementTracker';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/build-planner" element={<BuildPlanner />} />
           <Route path="/builds" element={<SavedBuilds />} />
           <Route path="/build/:code" element={<SharedBuildView />} />
+          <Route path="/achievement-tracker" element={<AchievementTracker />} />
         </Routes>
       </div>
       <Footer />

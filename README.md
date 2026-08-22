@@ -14,6 +14,8 @@ Este MVP cobre o **Build Planner** completo, 100% client-side (sem backend ainda
 - Salvar builds localmente (localStorage via Zustand)
 - Compartilhar build por link (build inteira codificada na URL, sem precisar de servidor)
 
+> **📝 Nota / TODO**: a lógica do Build Planner está fechada (níveis, point-buy, CA por tipo de armadura, slots exclusivos de equipamento, validação de escolhas de talento). O que falta pra considerar essa parte 100% pronta é **só popular os dados** em `src/data/` — mais raças, classes/subclasses, talentos, magias e equipamentos. Não há mais nenhuma peça de lógica pendente conhecida.
+
 ## Stack
 
 - React + Vite + TypeScript

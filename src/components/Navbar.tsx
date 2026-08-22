@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Lock } from 'lucide-react';
-import { roadmap, TOTAL_PARTS, CURRENT_PART } from '@/config/roadmap';
+import { roadmap, TOTAL_PARTS, DONE_PARTS } from '@/config/roadmap';
 
 const STATUS_LABEL: Record<string, string> = {
   done: 'Pronto',
@@ -108,6 +108,7 @@ export function Navbar() {
 
   const isBuildPlanner = location.pathname.startsWith('/build-planner');
   const isSavedBuilds = location.pathname === '/builds';
+  const isAchievementTracker = location.pathname === '/achievement-tracker';
 
   return (
     <header className="sticky top-0 z-10 border-b border-border-ember bg-surface/80 backdrop-blur">
@@ -133,6 +134,14 @@ export function Navbar() {
           >
             Minhas builds
           </Link>
+          <Link
+            to="/achievement-tracker"
+            className={`focus-ring rounded-sm px-2.5 py-1.5 transition-colors ${
+              isAchievementTracker ? 'text-gold-bright' : 'text-ink-dim hover:text-gold-bright'
+            }`}
+          >
+            Achievements
+          </Link>
 
           <div className="relative ml-1" ref={containerRef}>
             <button
@@ -144,7 +153,7 @@ export function Navbar() {
             >
               <span>Roteiro</span>
               <span className="text-gold-dim">
-                {CURRENT_PART?.order}/{TOTAL_PARTS}
+                {DONE_PARTS}/{TOTAL_PARTS}
               </span>
               <ChevronDown size={13} className={`transition-transform ${roadmapOpen ? 'rotate-180' : ''}`} />
             </button>

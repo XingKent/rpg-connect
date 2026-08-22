@@ -1,0 +1,96 @@
+import { achievements } from '@/features/achievement-tracker/data/achievements';
+import { useAchievementStore } from '@/features/achievement-tracker/store/achievementStore';
+import { computeProgress } from '@/features/achievement-tracker/lib/progress';
+import { ProgressBar } from '@/components/ui/ProgressBar';
+import { Button } from '@/components/ui/Button';
+
+export function AchievementTracker() {
+  const checked = useAchievementStore((s) => s.checked);
+  const toggle = useAchievementStore((s) => s.toggle);
+  const resetAll = useAchievementStore((s) => s.resetAll);
+
+  const progress = computeProgress(achievements, checked);
+
+  function handleReset() {
+    if (window.confirm('Isso desmarca todas as conquistas. Continuar?')) {
+      resetAll();
+    }
+  }
+
+  return (
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-10 md:px-6">
+      <header>
+        <h1 className="rune-title text-2xl text-gold-bright">Achievement Tracker</h1>
+        <p className="mt-1 text-sm text-ink-dim">
+          Marque manualmente as conquistas que você já desbloqueou em sua campanha.
+        </p>
+      </header>
+
+      <div className="parchment-panel rounded-sm p-5">
+        <ProgressBar percent={progress.percent} label={`${progress.done} de ${progress.total} conquistas`} />
+      </div>
+
+      <p className="font-data text-[11px] text-ink-faint">
+        Lista retirada diretamente de guias da steam e do aplicativo PS App.
+      </p>
+
+      <div className="flex flex-col gap-8">
+        {progress.byCategory.map((cat) => (
+          <section key={cat.category}>
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <h2 className="rune-title text-lg text-ink">{cat.category}</h2>
+              <span className="font-data text-xs text-ink-faint">
+                {cat.done}/{cat.total}
+              </span>
+            </div>
+            <ul className="flex flex-col gap-2">
+              {achievements
+                .filter((a) => a.category === cat.category)
+                .map((achievement) => {
+                  const isChecked = Boolean(checked[achievement.id]);
+                  return (
+                    <li key={achievement.id}>
+                      <button
+                        type="button"
+                        onClick={() => toggle(achievement.id)}
+                        aria-pressed={isChecked}
+                        className={`focus-ring flex w-full items-start gap-3 rounded-sm border p-3 text-left transition-colors duration-150 ${
+                          isChecked
+                            ? 'border-gold bg-surface-raised'
+                            : 'border-border-ember bg-surface hover:border-border-ember-bright'
+                        }`}
+                      >
+                        <span
+                          className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border text-[11px] ${
+                            isChecked
+                              ? 'border-gold-bright bg-gold text-void'
+                              : 'border-border-ember-bright text-transparent'
+                          }`}
+                        >
+                          ✓
+                        </span>
+                        <span>
+                          <span
+                            className={`rune-title block text-sm ${isChecked ? 'text-gold-bright' : 'text-ink'}`}
+                          >
+                            {achievement.name}
+                          </span>
+                          <span className="text-sm text-ink-dim">{achievement.description}</span>
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+            </ul>
+          </section>
+        ))}
+      </div>
+
+      <div>
+        <Button variant="danger" onClick={handleReset}>
+          Desmarcar tudo
+        </Button>
+      </div>
+    </div>
+  );
+}

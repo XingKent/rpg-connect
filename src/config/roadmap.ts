@@ -21,7 +21,7 @@ export const roadmap: RoadmapItem[] = [
     label: 'Build Planner',
     description: 'Monte raça, classe, atributos, talentos, magias e equipamentos.',
     icon: Wand2,
-    status: 'current',
+    status: 'done',
     path: '/build-planner',
   },
   {
@@ -76,11 +76,13 @@ export const roadmap: RoadmapItem[] = [
     id: 'achievement-tracker',
     order: 8,
     label: 'Achievement Tracker',
-    description: 'Marque conquistas manualmente (integração com PSN no futuro).',
+    description: 'Marque manualmente as conquistas desbloqueadas na sua campanha.',
     icon: Trophy,
-    status: 'planned',
+    status: 'current',
+    path: '/achievement-tracker',
   },
 ];
 
 export const TOTAL_PARTS = roadmap.length;
+export const DONE_PARTS = roadmap.filter((r) => r.status === 'done').length;
 export const CURRENT_PART = roadmap.find((r) => r.status === 'current');

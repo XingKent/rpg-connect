@@ -17,6 +17,7 @@ import {
   featSlotsForLevel,
   maxSpellLevelForCharacterLevel,
 } from '@/features/build-planner/lib/level';
+import { normalizeBuild } from '@/features/build-planner/lib/normalizeBuild';
 
 function emptyDraft(): Build {
   const now = new Date().toISOString();
@@ -254,7 +255,7 @@ export const useBuildStore = create<BuildStoreState>()(
 
       resetDraft: () => set({ draft: emptyDraft() }),
 
-      loadDraft: (build) => set({ draft: { ...build } }),
+      loadDraft: (build) => set({ draft: normalizeBuild(build) }),
 
       saveDraft: () => {
         const state = get();
@@ -273,6 +274,16 @@ export const useBuildStore = create<BuildStoreState>()(
     {
       name: 'bg3-build-planner-storage',
       partialize: (s) => ({ savedBuilds: s.savedBuilds, draft: s.draft }),
+      merge: (persistedState, currentState) => {
+        const persisted = (persistedState ?? {}) as Partial<Pick<BuildStoreState, 'draft' | 'savedBuilds'>>;
+        return {
+          ...currentState,
+          draft: persisted.draft ? normalizeBuild(persisted.draft) : currentState.draft,
+          savedBuilds: Array.isArray(persisted.savedBuilds)
+            ? persisted.savedBuilds.map(normalizeBuild)
+            : currentState.savedBuilds,
+        };
+      },
     }
   )
 );
