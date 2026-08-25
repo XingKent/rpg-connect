@@ -30,6 +30,10 @@ coverage
 # Vercel (criado localmente pela CLI ao rodar `vercel`, não deve ser versionado)
 .vercel
 
+# Notas pessoais de desenvolvimento — não são conteúdo público do repositório
+NOTES.md
+guia-do-projeto.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
