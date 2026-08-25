@@ -304,7 +304,7 @@ export const achievements: Achievement[] = [
     category: 'Comunidade',
   },
 
-  // Endings
+  // Finais
   {
     id: "All's-Weel-that-Ends-Well",
     name: 'Tudo Acaba Bem se Acaba Bem',
@@ -339,7 +339,7 @@ export const achievements: Achievement[] = [
   {
     id: 'Critical-Hit',
     name: 'Acerto Crítico',
-    description: 'Complete o jogo no modo estratégia.',
+    description: 'Complete o jogo no modo estrategia.',
     category: 'Finais',
   },
 ];
