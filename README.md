@@ -6,8 +6,8 @@ Projeto de fã, sem afiliação com a Larian Studios.
 
 ## Partes prontas
 
-- **Build Planner** — crie e compartilhe builds completas
-- **Achievement Tracker** — acompanhe manualmente as conquistas desbloqueadas
+- **Build Planner** - crie e compartilhe builds completas
+- **Achievement Tracker** - acompanhe manualmente as conquistas desbloqueadas
 
 As próximas 6 partes (Wiki, Quest Tracker, Companion Approval Tracker, Interactive Map, Combat Simulator, Loot Finder) estão no roadmap dentro do próprio site (menu "Roteiro").
 
@@ -25,7 +25,7 @@ As próximas 6 partes (Wiki, Quest Tracker, Companion Approval Tracker, Interact
 
 ```bash
 npm install
-npm run dev       # http://localhost:5173
+npm run dev
 ```
 
 ## Scripts
