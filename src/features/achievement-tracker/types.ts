@@ -1,5 +1,5 @@
 export type AchievementCategory =
-  'Prólogo' | 'Ato 1' | 'Ato 2' | 'Ato 3' | 'Companion' | 'Comunidade' | 'Endings';
+  'Prólogo' | 'Ato 1' | 'Ato 2' | 'Ato 3' | 'Companion' | 'Comunidade' | 'Finais';
 
 export interface Achievement {
   id: string;

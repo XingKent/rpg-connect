@@ -46,6 +46,12 @@ npm run dev       # http://localhost:5173
 | `npm run test`          | Roda os testes uma vez           |
 | `npm run test:watch`    | Testes em modo watch             |
 
+## Deploy (Vercel)
+
+O projeto já vem pronto pra Vercel: basta importar o repositório — ela detecta o Vite automaticamente (comando de build `npm run build`, saída em `dist/`).
+
+O arquivo `vercel.json` na raiz é **necessário** e já está incluído: como o app usa React Router (SPA), sem esse arquivo qualquer rota que não seja `/` (ex.: `/build-planner`, ou um link de build compartilhada `/build/:code`) retorna 404 ao ser acessada diretamente ou recarregada com F5. O rewrite nele redireciona toda rota para `index.html`, deixando o React Router assumir a navegação no navegador.
+
 ## Estrutura
 
 O projeto está organizado por **features**, já pensando nas 8 partes do roadmap completo. Cada parte futura ganha sua própria pasta em `features/`, mesmo antes de ser implementada — hoje elas têm só um `README.md` marcando o que vai entrar ali.

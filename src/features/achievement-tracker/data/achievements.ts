@@ -309,37 +309,37 @@ export const achievements: Achievement[] = [
     id: "All's-Weel-that-Ends-Well",
     name: 'Tudo Acaba Bem se Acaba Bem',
     description: 'termine o jogo (com um sincero "obrigado!" da Larian Studios).',
-    category: 'Endings',
+    category: 'Finais',
   },
   {
     id: 'Absolute-Power-Corrupts',
     name: 'Poder Absoluto, Corrupção Absoluta',
     description: 'Assuma o controle do Cérebro de Netheril, curve o mundo à sua vontade e reine com terror.',
-    category: 'Endings',
+    category: 'Finais',
   },
   {
     id: 'Hero-of-the-Forgotten-Realms',
     name: 'A Salvação dos Reinos Esquecidos',
     description: 'Mate o Cérebro de Netheril, destrua as larvas da Absoluta e salve o dia.',
-    category: 'Endings',
+    category: 'Finais',
   },
   {
     id: 'Sins-of-the-Father',
     name: 'Pecados do Pai',
     description:
       'Tome controle do Cérebro de Netheril em nome de Bhaal, semeie caos e reivindique o Trono de Sangue.',
-    category: 'Endings',
+    category: 'Finais',
   },
   {
     id: 'Ceremorphosis',
     name: 'Ceremorfose',
     description: 'Torne-se devorador de mentes, derrote o Cérebro de Netheril e faça o sacrifício final.',
-    category: 'Endings',
+    category: 'Finais',
   },
   {
     id: 'Critical-Hit',
     name: 'Acerto Crítico',
     description: 'Complete o jogo no modo estratégia.',
-    category: 'Endings',
+    category: 'Finais',
   },
 ];

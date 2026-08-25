@@ -27,6 +27,9 @@ dist-ssr
 coverage
 .vite
 
+# Vercel (criado localmente pela CLI ao rodar `vercel`, não deve ser versionado)
+.vercel
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

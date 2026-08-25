@@ -1,6 +1,7 @@
 import { achievements } from '@/features/achievement-tracker/data/achievements';
 import { useAchievementStore } from '@/features/achievement-tracker/store/achievementStore';
 import { computeProgress } from '@/features/achievement-tracker/lib/progress';
+import { AchievementIcon } from '@/features/achievement-tracker/components/AchievementIcon';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
 
@@ -31,7 +32,7 @@ export function AchievementTracker() {
       </div>
 
       <p className="font-data text-[11px] text-ink-faint">
-        Lista retirada diretamente de guias da steam e do aplicativo PS App.
+        Lista retirada diretamente de guias da Steam e do aplicativo PS App.
       </p>
 
       <div className="flex flex-col gap-8">
@@ -69,6 +70,11 @@ export function AchievementTracker() {
                         >
                           ✓
                         </span>
+                        <AchievementIcon
+                          image={achievement.image}
+                          name={achievement.name}
+                          unlocked={isChecked}
+                        />
                         <span>
                           <span
                             className={`rune-title block text-sm ${isChecked ? 'text-gold-bright' : 'text-ink'}`}
