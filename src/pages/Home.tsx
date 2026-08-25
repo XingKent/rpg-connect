@@ -9,7 +9,7 @@ export function Home() {
         Forje sua <span className="text-gold-bright">build</span> antes da aventura
       </h1>
       <p className="mt-4 max-w-xl text-ink-dim">
-        Escolha raça, classe, atributos, talentos, magias e equipamentos — depois compartilhe sua build com um
+        Escolha raça, classe, atributos, talentos, magias e equipamentos. Depois compartilhe sua build com um
         link, como um selo de cera em um pergaminho.
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
