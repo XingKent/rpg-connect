@@ -28,7 +28,7 @@ export const roadmap: RoadmapItem[] = [
     id: 'wiki',
     order: 2,
     label: 'Wiki',
-    description: 'Classes, raças, companheiros, feitiços, armas e mais — tudo pesquisável.',
+    description: 'Classes, raças, companheiros, feitiços, armas e mais.',
     icon: BookOpen,
     status: 'planned',
   },
