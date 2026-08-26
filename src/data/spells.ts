@@ -1,7 +1,7 @@
 import type { Spell } from '@/types/bg3';
 
 export const spells: Spell[] = [
-  // Nível 0 — Truques
+  // Nível 0 - Truques
   {
     id: 'firebolt',
     name: 'Raio de Fogo',

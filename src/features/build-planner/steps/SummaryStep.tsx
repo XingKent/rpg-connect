@@ -99,13 +99,13 @@ export function SummaryStep() {
           <div>
             <div className="text-[11px] uppercase tracking-[0.15em] text-ink-faint">Raça</div>
             <div className="text-ink">
-              {race ? `${race.name}${subrace ? ` (${subrace.name})` : ''}` : '—'}
+              {race ? `${race.name}${subrace ? ` (${subrace.name})` : ''}` : '-'}
             </div>
           </div>
           <div>
             <div className="text-[11px] uppercase tracking-[0.15em] text-ink-faint">Classe</div>
             <div className="text-ink">
-              {cls ? `${cls.name}${subclass ? ` — ${subclass.name}` : ''}` : '—'}
+              {cls ? `${cls.name}${subclass ? ` - ${subclass.name}` : ''}` : '-'}
             </div>
           </div>
           <div>
@@ -114,7 +114,7 @@ export function SummaryStep() {
           </div>
           <div>
             <div className="text-[11px] uppercase tracking-[0.15em] text-ink-faint">Dado de vida</div>
-            <div className="text-ink">{cls ? `d${cls.hitDie}` : '—'}</div>
+            <div className="text-ink">{cls ? `d${cls.hitDie}` : '-'}</div>
           </div>
         </div>
       </div>

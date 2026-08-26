@@ -14,7 +14,7 @@ describe('normalizeBuild', () => {
       equipmentIds: [],
       createdAt: '2026-01-01T00:00:00.000Z',
       updatedAt: '2026-01-01T00:00:00.000Z',
-      // no `level`, no `featAbilityChoices` — as it would look before those fields existed
+      // no `level`, no `featAbilityChoices` - as it would look before those fields existed
     };
 
     const normalized = normalizeBuild(old);

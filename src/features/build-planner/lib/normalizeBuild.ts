@@ -17,7 +17,7 @@ function normalizeAbilityScores(value: unknown): AbilityScores {
 /**
  * Fills in defaults for any field missing from an older Build shape (e.g. a build saved or
  * shared before `level` or `featAbilityChoices` existed). Safe to call on any already-valid
- * Build too — it just passes those fields through unchanged.
+ * Build too - it just passes those fields through unchanged.
  */
 export function normalizeBuild(raw: Partial<Build>): Build {
   const input = raw as Record<string, unknown>;

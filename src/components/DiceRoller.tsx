@@ -78,7 +78,7 @@ export function DiceRoller() {
               <X size={15} />
             </button>
           </div>
-          <p className="mt-1 text-xs text-ink-faint">Só por diversão — não afeta nenhuma build.</p>
+          <p className="mt-1 text-xs text-ink-faint">Só por diversão. Não afeta nenhuma build.</p>
 
           <div className="mt-3 flex items-center justify-between gap-3">
             <label

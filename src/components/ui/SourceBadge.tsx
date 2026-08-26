@@ -5,7 +5,7 @@ interface SourceBadgeProps {
   source: ContentSource;
 }
 
-/** Renders nothing for plain SRD content — the badge only calls out what's specific to BG3. */
+/** Renders nothing for plain SRD content - the badge only calls out what's specific to BG3. */
 export function SourceBadge({ source }: SourceBadgeProps) {
   if (source !== 'bg3') return null;
 

@@ -61,7 +61,7 @@ export function FeatsStep() {
         <div className="parchment-panel flex flex-col gap-5 rounded-sm border-l-2 !border-l-gold-dim p-4">
           <div>
             <span className="font-data text-[11px] uppercase tracking-[0.15em] text-gold-dim">
-              Sub-etapa · Escolha de atributos
+              Sub-etapa - Escolha de atributos
             </span>
             <p className="mt-1 text-sm text-ink-dim">
               Alguns talentos escolhidos exigem uma decisão extra antes de seguir.

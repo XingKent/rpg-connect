@@ -28,7 +28,7 @@ export function AbilitiesStep() {
           <h2 className="rune-title text-xl text-gold-bright">Atributos</h2>
           <p className="mt-1 text-sm text-ink-dim">
             Distribua pontos entre os seis atributos (sistema de compra por pontos). Ao escolher uma classe,
-            uma distribuição recomendada é aplicada automaticamente — ajuste como preferir.
+            uma distribuição recomendada é aplicada automaticamente, ajuste como preferir.
           </p>
         </div>
         <div className="parchment-panel rounded-sm px-4 py-2 text-right">

@@ -141,7 +141,7 @@ export function EquipmentStep() {
                             {EQUIPMENT_ACTION_TYPE_LABELS[action.type]} ·{' '}
                             {EQUIPMENT_ACTION_COOLDOWN_LABELS[action.cooldown]}:
                           </span>{' '}
-                          {action.name} — {action.description}
+                          {action.name} - {action.description}
                         </li>
                       ))}
                     </ul>
