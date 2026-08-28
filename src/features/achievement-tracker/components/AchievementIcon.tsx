@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Trophy } from 'lucide-react';
 
 interface AchievementIconProps {
@@ -7,14 +8,22 @@ interface AchievementIconProps {
 }
 
 export function AchievementIcon({ image, name, unlocked }: AchievementIconProps) {
+  const [failedToLoad, setFailedToLoad] = useState(false);
+  const showImage = Boolean(image) && !failedToLoad;
+
   return (
     <span
       className={`flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-sm border ${
         unlocked ? 'border-gold-bright bg-surface-raised' : 'border-border-ember bg-surface-inset'
       }`}
     >
-      {image ? (
-        <img src={image} alt={name} className="h-full w-full object-cover" />
+      {showImage ? (
+        <img
+          src={image}
+          alt={name}
+          className="h-full w-full object-cover"
+          onError={() => setFailedToLoad(true)}
+        />
       ) : (
         <Trophy size={20} className={unlocked ? 'text-gold-bright' : 'text-ink-faint'} />
       )}

@@ -81,3 +81,9 @@ body {
   outline: 2px solid var(--color-gold-bright);
   outline-offset: 2px;
 }
+
+.spoiler-hidden {
+  filter: blur(5px);
+  user-select: none;
+  transition: filter 0.2s ease;
+}

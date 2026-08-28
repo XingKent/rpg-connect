@@ -1,7 +1,7 @@
 import { achievements } from '@/features/achievement-tracker/data/achievements';
 import { useAchievementStore } from '@/features/achievement-tracker/store/achievementStore';
 import { computeProgress } from '@/features/achievement-tracker/lib/progress';
-import { AchievementIcon } from '@/features/achievement-tracker/components/AchievementIcon';
+import { AchievementRow } from '@/features/achievement-tracker/components/AchievementRow';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { Button } from '@/components/ui/Button';
 
@@ -47,46 +47,15 @@ export function AchievementTracker() {
             <ul className="flex flex-col gap-2">
               {achievements
                 .filter((a) => a.category === cat.category)
-                .map((achievement) => {
-                  const isChecked = Boolean(checked[achievement.id]);
-                  return (
-                    <li key={achievement.id}>
-                      <button
-                        type="button"
-                        onClick={() => toggle(achievement.id)}
-                        aria-pressed={isChecked}
-                        className={`focus-ring flex w-full items-start gap-3 rounded-sm border p-3 text-left transition-colors duration-150 ${
-                          isChecked
-                            ? 'border-gold bg-surface-raised'
-                            : 'border-border-ember bg-surface hover:border-border-ember-bright'
-                        }`}
-                      >
-                        <span
-                          className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border text-[11px] ${
-                            isChecked
-                              ? 'border-gold-bright bg-gold text-void'
-                              : 'border-border-ember-bright text-transparent'
-                          }`}
-                        >
-                          ✓
-                        </span>
-                        <AchievementIcon
-                          image={achievement.image}
-                          name={achievement.name}
-                          unlocked={isChecked}
-                        />
-                        <span>
-                          <span
-                            className={`rune-title block text-sm ${isChecked ? 'text-gold-bright' : 'text-ink'}`}
-                          >
-                            {achievement.name}
-                          </span>
-                          <span className="text-sm text-ink-dim">{achievement.description}</span>
-                        </span>
-                      </button>
-                    </li>
-                  );
-                })}
+                .map((achievement) => (
+                  <li key={achievement.id}>
+                    <AchievementRow
+                      achievement={achievement}
+                      isChecked={Boolean(checked[achievement.id])}
+                      onToggleCheck={() => toggle(achievement.id)}
+                    />
+                  </li>
+                ))}
             </ul>
           </section>
         ))}
