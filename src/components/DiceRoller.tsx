@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Dices, RotateCcw, X } from 'lucide-react';
-import { DICE_TYPES, rollDie } from '@/lib/dice';
+import {
+  DICE_TYPES,
+  CUSTOM_DIE_MIN,
+  CUSTOM_DIE_MAX,
+  rollDie,
+  classifyRoll,
+  computeRollTotal,
+  type RollOutcome,
+} from '@/lib/dice';
 
 interface RollEntry {
   id: string;
@@ -8,14 +16,22 @@ interface RollEntry {
   modifier: number;
   roll: number;
   total: number;
+  outcome: RollOutcome;
 }
 
 const ROLL_ANIMATION_FRAMES = 7;
 const ROLL_ANIMATION_INTERVAL_MS = 60;
 
+const OUTCOME_TEXT_CLASSES: Record<RollOutcome, string> = {
+  fumble: 'text-crimson-bright',
+  critical: 'text-yellow-400',
+  normal: 'text-ink',
+};
+
 export function DiceRoller() {
   const [open, setOpen] = useState(false);
   const [modifier, setModifier] = useState(0);
+  const [customDie, setCustomDie] = useState(30);
   const [history, setHistory] = useState<RollEntry[]>([]);
   const [rollingDie, setRollingDie] = useState<number | null>(null);
   const [rollingValue, setRollingValue] = useState<number | null>(null);
@@ -39,7 +55,7 @@ export function DiceRoller() {
   }, []);
 
   function handleRoll(die: number) {
-    if (rollingDie !== null) return;
+    if (rollingDie !== null || die < CUSTOM_DIE_MIN) return;
     setRollingDie(die);
 
     let frame = 0;
@@ -49,12 +65,14 @@ export function DiceRoller() {
       if (frame >= ROLL_ANIMATION_FRAMES) {
         clearInterval(interval);
         const roll = rollDie(die);
+        const outcome = classifyRoll(roll, die);
         const entry: RollEntry = {
           id: crypto.randomUUID(),
           die,
           modifier,
           roll,
-          total: roll + modifier,
+          total: computeRollTotal(roll, die, modifier),
+          outcome,
         };
         setHistory((prev) => [entry, ...prev].slice(0, 8));
         setRollingDie(null);
@@ -129,6 +147,38 @@ export function DiceRoller() {
             ))}
           </div>
 
+          <div className="mt-2 flex items-center gap-1.5">
+            <label htmlFor="custom-die" className="sr-only">
+              Dado personalizado
+            </label>
+            <span className="font-data text-xs text-ink-faint">d</span>
+            <input
+              id="custom-die"
+              type="number"
+              min={CUSTOM_DIE_MIN}
+              max={CUSTOM_DIE_MAX}
+              value={customDie}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                if (Number.isNaN(value)) return;
+                setCustomDie(Math.min(CUSTOM_DIE_MAX, Math.max(CUSTOM_DIE_MIN, value)));
+              }}
+              className="focus-ring w-16 rounded-sm border border-border-ember bg-surface-inset px-2 py-1 font-data text-xs text-ink"
+            />
+            <button
+              type="button"
+              onClick={() => handleRoll(customDie)}
+              disabled={rollingDie !== null}
+              className={`focus-ring flex-1 rounded-sm border py-1.5 font-data text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+                rollingDie === customDie
+                  ? 'border-gold-bright bg-gold/10 text-gold-bright'
+                  : 'border-border-ember text-ink-dim hover:border-gold-dim hover:text-gold-bright'
+              }`}
+            >
+              {rollingDie === customDie ? `${rollingValue}` : 'Rolar personalizado'}
+            </button>
+          </div>
+
           {history.length > 0 && (
             <div className="mt-4">
               <div className="flex items-center justify-between">
@@ -154,9 +204,11 @@ export function DiceRoller() {
                       d{entry.die}
                       {entry.modifier !== 0 && ` (${entry.modifier >= 0 ? '+' : ''}${entry.modifier})`}
                     </span>
-                    <span className="text-ink">
+                    <span className={OUTCOME_TEXT_CLASSES[entry.outcome]}>
+                      {entry.outcome === 'fumble' && 'Erro crítico! '}
+                      {entry.outcome === 'critical' && 'Crítico! '}
                       {entry.roll}
-                      {entry.modifier !== 0 && ` → ${entry.total}`}
+                      {entry.outcome === 'normal' && entry.modifier !== 0 && ` → ${entry.total}`}
                     </span>
                   </li>
                 ))}
