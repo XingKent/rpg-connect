@@ -21,7 +21,7 @@ export const roadmap: RoadmapItem[] = [
     label: 'Build Planner',
     description: 'Monte raça, classe, atributos, talentos, magias e equipamentos.',
     icon: Wand2,
-    status: 'done',
+    status: 'current',
     path: '/build-planner',
   },
   {
@@ -78,7 +78,7 @@ export const roadmap: RoadmapItem[] = [
     label: 'Achievement Tracker',
     description: 'Marque manualmente as conquistas desbloqueadas na sua campanha.',
     icon: Trophy,
-    status: 'current',
+    status: 'done',
     path: '/achievement-tracker',
   },
 ];
