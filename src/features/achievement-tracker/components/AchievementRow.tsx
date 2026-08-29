@@ -10,7 +10,9 @@ interface AchievementRowProps {
 }
 
 export function AchievementRow({ achievement, isChecked, onToggleCheck }: AchievementRowProps) {
+  const hasSpoiler = Boolean(achievement.spoiler);
   const [revealed, setRevealed] = useState(false);
+  const showContent = !hasSpoiler || revealed;
 
   return (
     <div
@@ -33,7 +35,7 @@ export function AchievementRow({ achievement, isChecked, onToggleCheck }: Achiev
       </button>
 
       <AchievementIcon
-        image={revealed ? achievement.image : undefined}
+        image={showContent ? achievement.image : undefined}
         name={achievement.name}
         unlocked={isChecked}
       />
@@ -42,7 +44,7 @@ export function AchievementRow({ achievement, isChecked, onToggleCheck }: Achiev
         <span className={`rune-title block text-sm ${isChecked ? 'text-gold-bright' : 'text-ink'}`}>
           {achievement.name}
         </span>
-        {revealed ? (
+        {showContent ? (
           <span className="text-sm text-ink-dim">{achievement.description}</span>
         ) : (
           <span className="relative block text-sm text-ink-dim">
@@ -54,15 +56,17 @@ export function AchievementRow({ achievement, isChecked, onToggleCheck }: Achiev
         )}
       </div>
 
-      <button
-        type="button"
-        onClick={() => setRevealed((v) => !v)}
-        aria-expanded={revealed}
-        className="focus-ring flex shrink-0 items-center gap-1 rounded-sm border border-border-ember px-2 py-1 font-data text-[10px] uppercase tracking-[0.08em] text-ink-faint transition-colors hover:border-gold-dim hover:text-gold-bright"
-      >
-        {revealed ? <EyeOff size={12} /> : <Eye size={12} />}
-        {revealed ? 'Ocultar' : 'Revelar'}
-      </button>
+      {hasSpoiler && (
+        <button
+          type="button"
+          onClick={() => setRevealed((v) => !v)}
+          aria-expanded={revealed}
+          className="focus-ring flex shrink-0 items-center gap-1 rounded-sm border border-border-ember px-2 py-1 font-data text-[10px] uppercase tracking-[0.08em] text-ink-faint transition-colors hover:border-gold-dim hover:text-gold-bright"
+        >
+          {revealed ? <EyeOff size={12} /> : <Eye size={12} />}
+          {revealed ? 'Ocultar' : 'Revelar'}
+        </button>
+      )}
     </div>
   );
 }

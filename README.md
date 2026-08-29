@@ -1,13 +1,13 @@
 # BG3 Companion
 
-Um site para montar builds de Baldur's Gate 3 antes de jogar — raça, classe, atributos, talentos, magias e equipamentos, com resumo de bônus finais e compartilhamento por link.
+Um site para montar builds de Baldur's Gate 3 antes de jogar - raça, classe, atributos, talentos, magias e equipamentos, com resumo de bônus finais e compartilhamento por link.
 
 Projeto de fã, sem afiliação com a Larian Studios.
 
 ## Partes prontas
 
-- **Build Planner** — crie e compartilhe builds completas
-- **Achievement Tracker** — acompanhe manualmente as conquistas desbloqueadas
+- **Build Planner** - crie e compartilhe builds completas
+- **Achievement Tracker** - acompanhe manualmente as conquistas desbloqueadas
 
 As próximas 6 partes (Wiki, Quest Tracker, Companion Approval Tracker, Interactive Map, Combat Simulator, Loot Finder) estão no roadmap dentro do próprio site (menu "Roteiro").
 
@@ -47,3 +47,4 @@ Pronto pra Vercel: importe o repositório (ela detecta o Vite automaticamente). 
 ## Dados e créditos
 
 Magias e itens combinam o SRD de D&D 5e ([Open5e](https://open5e.com)) com referências específicas do BG3 ([bg3.wiki](https://bg3.wiki)), marcadas com o selo "BG3" onde aparecem.
+

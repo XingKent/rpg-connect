@@ -8,6 +8,7 @@ export const achievements: Achievement[] = [
     description: 'Tome controle do nauutiloide e escape dos Infernos.',
     category: 'Prólogo',
     image: '/achievements/A-Descent_from_Avernus.webp',
+
   },
   {
     id: 'Devil-in-the-Details',
@@ -25,6 +26,7 @@ export const achievements: Achievement[] = [
       'Resgate Sazza do santuário dos druidas, acampamento golbin e Torres do Luar em uma única aventura.',
     category: 'Ato 1',
     image: '/achievements/A-She_Cannot_Be_Caged!.webp',
+    spoiler: true
   },
   {
     id: 'You-Have-Two-Hands-for-a-Reason',
@@ -33,6 +35,7 @@ export const achievements: Achievement[] = [
       'Faça carinhos no Coçada e no Urso-Coruja ao mesmo tempo - a maior alegria para qualquer aventureiro.',
     category: 'Ato 1',
     image: '/achievements/A-You_Have_Two_Hands_for_a_Reason.webp',
+    spoiler: true
   },
   {
     id: 'Fetch-Quest',
@@ -46,7 +49,8 @@ export const achievements: Achievement[] = [
     name: 'Expansão da Consciência',
     description: 'Consuma um parasita e desbloqueie um novo poder. O que é isso se contorcendo aí dentro?',
     category: 'Ato 1',
-    image: '/achievements/A-Expand_Your_Mind.webp'
+    image: '/achievements/A-Expand_Your_Mind.webp',
+    spoiler: true
   },
   {
     id: 'Pest-Control',
@@ -55,6 +59,7 @@ export const achievements: Achievement[] = [
       'Mate a aranha interplanar matriarca antes que seus ovos choquem. Por que elas têm tantas pernas?',
     category: 'Ato 1',
     image: '/achievements/A-Pest_Control.webp',
+    spoiler: true
   },
   {
     id: 'Rude-Crude-and-Full-of-Attitude',
@@ -62,6 +67,7 @@ export const achievements: Achievement[] = [
     description: 'Encontre e envoque a Quasit Pá. Ou o nome é... Garfo? Talvez Cesta?',
     category: 'Ato 1',
     image: '/achievements/A-Rude,_Crude,_and_Full_of_Attitude.webp',
+    spoiler: true
   },
   {
     id: 'Forged-in-Blood-and-Fire',
@@ -69,6 +75,7 @@ export const achievements: Achievement[] = [
     description: 'Crie um item na Forja de Adamantina.',
     category: 'Ato 1',
     image: '/achievements/A-Forged_in_Blood_and_Fire.webp',
+    spoiler: true
   },
   {
     id: 'A-Grym-Fate',
@@ -76,6 +83,7 @@ export const achievements: Achievement[] = [
     description: 'Mate o golem de adamantina sem usar o martelo da forja.',
     category: 'Ato 1',
     image: '/achievements/A-A_Grym_Fate.webp',
+    spoiler: true
   },
   {
     id: 'The-Plot-Thickens',
@@ -83,6 +91,7 @@ export const achievements: Achievement[] = [
     description: 'Conclua o Ato I. Adentre um lugar bem mais sombrio.',
     category: 'Ato 1',
     image: '/achievements/A-The_Plot_Thickens.webp',
+    spoiler: true
   },
 
   //Ato 2
@@ -91,49 +100,54 @@ export const achievements: Achievement[] = [
     name: 'A Ira da Rainha Lich',
     description: 'Una-se a Voss contra a rainha-deusa githyanki. Boa sorte.',
     category: 'Ato 2',
-    image: '/achievements/',
+    image: '/achievements/A-The_Lich-Queen\'s_Wrath.webp',
+    spoiler: true
   },
   {
     id: 'Non-Invasive-Procedure',
     name: 'Procedimento Não Invasivo',
     description: 'Mate o cirurgião sem deixá-lo usar suas habilidades cirúrgicas em combate.',
     category: 'Ato 2',
-    image: '/achievements/',
+    image: '/achievements/A-Non-Invasive_Procedure.webp',
   },
   {
     id: 'Penny-Pincher',
     name: 'Mão de Vaca',
     description: 'Derrote a exatora sem deixá-la usar ouro contra você - excelente planejamento financeiro.',
     category: 'Ato 2',
-    image: '/achievements/',
+    image: '/achievements/A-Penny_Pincher.webp',
   },
   {
     id: 'Under-Lock-and-Key',
     name: 'Fechado a Sete Chaves',
     description: 'Resgate todos os prisioneiros das profundezas de Torres do Luar em uma aventura.',
     category: 'Ato 2',
-    image: '/achievements/',
+    image: '/achievements/A-Under_Lock_and_Key.webp',
+    spoiler: true
   },
   {
     id: 'No-Free-Lunches',
     name: 'Não Existe Almoço Grátis',
     description: 'Derrote o apótolo de Myrkul antes que ele consuma qualquer necromita.',
     category: 'Ato 2',
-    image: '/achievements/',
+    image: '/achievements/A-No_Free_Lunches.webp',
+    spoiler: true
   },
   {
     id: 'Taking-Blood',
     name: 'Tirando Sangue',
     description: 'Roube o sangue de Lathander debaixo do Mosteiro Rosamanhã.',
     category: 'Ato 2',
-    image: '/achievements/',
+    image: '/achievements/A-Taking_Blood.webp',
+    spoiler: true
   },
   {
     id: 'The-City-Awaits',
     name: 'A cidade te Espera',
     description: "Saia do Ato II - Baldur's Gate e vá para a cidade de Elturel.",
     category: 'Ato 2',
-    image: '/achievements/',
+    image: '/achievements/A-The_City_Awaits.webp',
+    spoiler: true
   },
 
   // Ato 3
@@ -142,14 +156,15 @@ export const achievements: Achievement[] = [
     name: 'Dança Elegante',
     description: 'Derrote Gortash sem que uma única armadilha seja acionada - mais fácil falar do que fazer.',
     category: 'Ato 3',
-    image: '/achievements/',
+    image: '/achievements/A-Fancy_Footwork.webp',
   },
   {
     id: 'First-Blood',
     name: 'Sangue Originário',
     description: 'Mate Orin enquanto seus asseclas estão realizando o cântico ritualistico.',
     category: 'Ato 3',
-    image: '/achievements/',
+    image: '/achievements/A-First_Blood.webp',
+    spoiler: true
   },
   {
     id: 'Crash-Landing',
@@ -157,28 +172,31 @@ export const achievements: Achievement[] = [
     description:
       'Na Via do Draco, espere até que o dragão esteja no meio do voo, então derrube-o do céu... BUM!',
     category: 'Ato 3',
-    image: '/achievements/',
+    image: '/achievements/A-Crash_Landing.webp',
   },
   {
     id: "Murder-in-Baldur's-Gate",
     name: "Assassinato em Baldur's Gate",
     description: "Cubra as ruas de Baldur's Gate de sangue. Torne-se um Assassino Profano de Bhaal.",
     category: 'Ato 3',
-    image: '/achievements/',
+    image: '/achievements/A-Murder_in_Baldur\'s_Gate.webp',
+    spoiler: true
   },
   {
     id: 'Embrace-Your-Urge',
     name: 'Abrace o Impulso',
     description: 'Torne-se a arma definitiva de Bhaal. Torne-se seu Algoz.',
     category: 'Ato 3',
-    image: '/achievements/',
+    image: '/achievements/A-Embrace_Your_Urge.webp',
+    spoiler: true
   },
   {
     id: 'Interfectorem-Draconis',
     name: 'Mata Dragões',
     description: 'Mate o dragão vermelho na Cidade Alta.',
     category: 'Ato 3',
-    image: '/achievements/',
+    image: '/achievements/A-Interfectorem_Draconis.webp',
+    spoiler: true
   },
 
   // Companion
@@ -187,42 +205,48 @@ export const achievements: Achievement[] = [
     name: 'Só uma Mordidinha',
     description: 'Deixe Astarion te morder. Ai!',
     category: 'Companion',
-    image: '/achievements/',
+    image: '/achievements/A-Just_a_Nibble.webp',
+    spoiler: true
   },
   {
     id: 'Repairing-the-Weave',
     name: 'Reparando a Trama',
     description: 'Estabilize a esfera de Nethheril de Gale.',
     category: 'Companion',
-    image: '/achievements/',
+    image: '/achievements/A-Repairing_the_Weave.webp',
+    spoiler: true
   },
   {
     id: 'To-Bloom-in-Darkest-Night',
     name: 'Florecer na Noite Mais Escura',
     description: 'Presenteie Umbralma com uma orquídea noturna. A gente sempre soube que ela era sensível.',
     category: 'Companion',
-    image: '/achievements/',
+    image: '/achievements/A-To_Bloom_in_Darkest_Night.webp',
+    spoiler: true
   },
   {
     id: 'Loophole',
     name: 'Brecha',
     description: 'Rompa o pacto de Wyll com Mizora.',
     category: 'Companion',
-    image: '/achievements/',
+    image: '/achievements/A-Loophole.webp',
+    spoiler: true
   },
   {
     id: 'Hot-Date',
     name: 'Encontro Tórrido',
     description: 'Ir para um encontro com a Karlach - isso sim é brincar com fogo.',
     category: 'Companion',
-    image: '/achievements/',
+    image: '/achievements/A-Hot_Date.webp',
+    spoiler: true
   },
   {
     id: 'Mind-Blown',
     name: 'Os Brutos Também Amam',
     description: 'Comece um romance com o Imperador.',
     category: 'Companion',
-    image: '/achievements/',
+    image: '/achievements/A-Mind_Blown.webp',
+    spoiler: true
   },
 
   // Comunidade
@@ -231,72 +255,70 @@ export const achievements: Achievement[] = [
     name: 'Empurrão Mortal',
     description: 'Mate uma criatura com dano de queda.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Shove_Off.webp',
   },
   {
     id: 'Outsourcing',
     name: 'Terceirização',
-    description:
-      'Contrate um mercenério. Use-o para amizade ou como bucha de canhão - ninguém está julgando.',
+    description: 'Contrate um mercenério. Use-o para amizade ou como bucha de canhão - ninguém está julgando.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Outsourcing.webp',
   },
   {
     id: 'Buscer',
     name: 'Artista de Rua',
     description: 'Ganhe cem moedas de ouro em uma única aventura tocando músicas doces e encantadoras.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Busker.webp',
   },
   {
     id: 'Dig-for-Victory',
     name: 'A Vitória é Mais Embaixo',
     description: 'Desenterre cinco baús em uma única sessão. Tesouros, muitos tesouros!',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Dig_for_Victory.webp',
   },
   {
     id: 'Kill-Two-Birds-with-One-Gnome',
     name: 'Matar Dois Coelhos com Uma Gnomada',
     description: 'Use um inimigo como arma improvisada contra outro.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Kill_Two_Birds_With_One_Gnome.webp',
   },
   {
     id: 'Fists-of-Fury',
     name: 'Punhos de Fúria',
     description: 'Mate um personagem com um ataque desarmado.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Fists_of_Fury.webp',
   },
   {
     id: 'Punch-Drunk',
     name: 'Briga de Bar',
     description: 'Derrote vinte oponentes enquanto um personagem do grupo estiver bêbado.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Punch_Drunk.webp',
   },
   {
     id: 'Bedrolls-and-Breakfast',
     name: 'Sono Reparador',
-    description:
-      'Faça quatro descansos longos completos em uma única aventura. Quem disse que heróis não cansam?',
+    description: 'Faça quatro descansos longos completos em uma única aventura. Quem disse que heróis não cansam?',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Bedrolls_and_Breakfast.webp',
   },
   {
     id: 'Escapologist',
     name: 'Escapologia',
     description: 'Fuja da sua cela após uma prisão. Você não era radical?',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Escapologist.webp',
   },
   {
     id: 'No-Penny-Required',
     name: 'Livro Aberto',
     description: 'Use Detectar Pensamentos com sucesso para invadir os pensamentos de alguém.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-No_Penny_Required.webp',
   },
   {
     id: 'Action-Surge',
@@ -304,51 +326,50 @@ export const achievements: Achievement[] = [
     description:
       'Execute cinco ataques em um turno. Seus inimigos não saberão o que os atingiu (literalmente).',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Action_Surge.webp',
   },
   {
     id: 'Roleplayer',
     name: 'Interpretação Impecável',
     description: 'Complete dez objetivos da história pessoal em uma única aventura. Entre no personagem.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Roleplayer.webp',
   },
   {
     id: 'Bookworm',
     name: 'Leitura Voraz',
-    description:
-      'Leia 100 livros diferentes em uma única aventura. Heroísmo não se resume a missões ousadas.',
+    description: 'Leia 100 livros diferentes em uma única aventura. Heroísmo não se resume a missões ousadas.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Bookworm.webp',
   },
   {
     id: 'Homebrever',
     name: 'Criador de Conteúdo',
     description: 'Crie três soluções alquimicas únicas em uma única aventura. Saúde!',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Homebrewer.webp',
   },
   {
     id: 'Bottoms-Up',
     name: 'Vira, Vira, Vira',
     description: 'Faça um descanso longo usando apenas álcool. Uma tradição anã.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Bottoms_Up.webp',
   },
   {
     id: 'Jack-of-All-Trades',
     name: 'Pau pra Toda Obra',
-    description:
-      'Experimente todas as classes em uma única aventura sem pedir a Funestus para mudar seu personagem.',
+    description: 'Experimente todas as classes em uma única aventura sem pedir a Funestus para mudar seu personagem.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Jack-of-all-Trades.webp',
   },
   {
     id: 'Leave-No-One-Behind',
     name: 'Ninguém Fica para Trás',
     description: 'Salve todos os refugiados tieflings possíveis durante o jogo em uma única aventura.',
     category: 'Comunidade',
-    image: '/achievements/',
+    image: '/achievements/A-Leave_No_One_Behind.webp',
+    spoiler: true
   },
 
   // Finais
@@ -357,21 +378,24 @@ export const achievements: Achievement[] = [
     name: 'Tudo Acaba Bem se Acaba Bem',
     description: 'termine o jogo (com um sincero "obrigado!" da Larian Studios).',
     category: 'Finais',
-    image: '/achievements/',
+    image: '/achievements/A-All\'s_Well_That_Ends_Well.webp',
+    spoiler: true
   },
   {
     id: 'Absolute-Power-Corrupts',
     name: 'Poder Absoluto, Corrupção Absoluta',
     description: 'Assuma o controle do Cérebro de Netheril, curve o mundo à sua vontade e reine com terror.',
     category: 'Finais',
-    image: '/achievements/',
+    image: '/achievements/A-All\'s_Well_That_Ends_Well.webp',
+    spoiler: true
   },
   {
     id: 'Hero-of-the-Forgotten-Realms',
     name: 'A Salvação dos Reinos Esquecidos',
     description: 'Mate o Cérebro de Netheril, destrua as larvas da Absoluta e salve o dia.',
     category: 'Finais',
-    image: '/achievements/',
+    image: '/achievements/A-Hero_of_the_Forgotten_Realms.webp',
+    spoiler: true
   },
   {
     id: 'Sins-of-the-Father',
@@ -379,20 +403,22 @@ export const achievements: Achievement[] = [
     description:
       'Tome controle do Cérebro de Netheril em nome de Bhaal, semeie caos e reivindique o Trono de Sangue.',
     category: 'Finais',
-    image: '/achievements/',
+    image: '/achievements/A-Sins_of_the_Father.webp',
+    spoiler: true
   },
   {
     id: 'Ceremorphosis',
     name: 'Ceremorfose',
     description: 'Torne-se devorador de mentes, derrote o Cérebro de Netheril e faça o sacrifício final.',
     category: 'Finais',
-    image: '/achievements/',
+    image: '/achievements/A-Ceremorphosis.webp',
+    spoiler: true
   },
   {
     id: 'Critical-Hit',
     name: 'Acerto Crítico',
     description: 'Complete o jogo no modo estrategia.',
     category: 'Finais',
-    image: '/achievements/',
+    image: '/achievements/A-Critical_Hit.webp',
   },
 ];

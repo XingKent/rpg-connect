@@ -13,7 +13,7 @@ dist
 dist-ssr
 *.local
 
-# Variáveis de ambiente — NUNCA versionar (chaves de API, segredos)
+# Variáveis de ambiente - NUNCA versionar (chaves de API, segredos)
 .env
 .env.local
 .env.*.local
@@ -30,7 +30,7 @@ coverage
 # Vercel (criado localmente pela CLI ao rodar `vercel`, não deve ser versionado)
 .vercel
 
-# Notas pessoais de desenvolvimento — não são conteúdo público do repositório
+# Notas pessoais de desenvolvimento - não são conteúdo público do repositório
 NOTES.md
 guia-do-projeto.md
 
