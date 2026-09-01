@@ -12,6 +12,7 @@ import {
   finalModifiers,
   baseArmorClass,
   hasIncompleteFeatChoices,
+  formatFeatLabel,
 } from '@/features/build-planner/lib/buildCalculations';
 import { encodeBuildForShare } from '@/features/build-planner/lib/shareBuild';
 import { Button } from '@/components/ui/Button';
@@ -37,13 +38,7 @@ export function SummaryStep() {
   const incompleteFeatChoice = hasIncompleteFeatChoices(draft);
 
   const chosenFeats = feats.filter((f) => draft.featIds.includes(f.id));
-  const featLabels = chosenFeats.map((f) => {
-    if (!f.abilityChoice) return f.name;
-    const chosen = draft.featAbilityChoices[f.id] ?? [];
-    if (chosen.length === 0) return f.name;
-    const detail = chosen.map((a) => `${ABILITY_LABELS[a]} +${f.abilityChoice!.amount}`).join(', ');
-    return `${f.name} (${detail})`;
-  });
+  const featLabels = chosenFeats.map((f) => formatFeatLabel(f, draft));
   const chosenSpells = spells.filter((s) => draft.spellIds.includes(s.id));
   const chosenEquipment = equipment.filter((e) => draft.equipmentIds.includes(e.id));
 

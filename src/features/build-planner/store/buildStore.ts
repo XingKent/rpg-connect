@@ -57,7 +57,9 @@ interface BuildStoreState {
   applyRecommendedAbilities: () => void;
   toggleFeat: (featId: string) => void;
   clearFeats: () => void;
-  toggleFeatAbilityChoice: (featId: string, ability: AbilityKey) => void;
+  increaseFeatAbilityPoint: (featId: string, ability: AbilityKey) => void;
+  decreaseFeatAbilityPoint: (featId: string, ability: AbilityKey) => void;
+  clearFeatAbilityChoice: (featId: string) => void;
   toggleSpell: (spellId: string) => void;
   clearSpells: () => void;
   toggleEquipment: (equipmentId: string) => void;
@@ -186,19 +188,14 @@ export const useBuildStore = create<BuildStoreState>()(
       clearFeats: () =>
         set((s) => ({ draft: { ...s.draft, featIds: [], featAbilityChoices: {}, ...touch() } })),
 
-      toggleFeatAbilityChoice: (featId, ability) =>
+      increaseFeatAbilityPoint: (featId, ability) =>
         set((s) => {
           const feat = feats.find((f) => f.id === featId);
           if (!feat?.abilityChoice) return s;
-          const current = s.draft.featAbilityChoices[featId] ?? [];
-          const has = current.includes(ability);
-          let next: AbilityKey[];
-          if (has) {
-            next = current.filter((a) => a !== ability);
-          } else {
-            if (current.length >= feat.abilityChoice.picks) return s;
-            next = [...current, ability];
-          }
+          const current = s.draft.featAbilityChoices[featId] ?? {};
+          const totalAllocated = Object.values(current).reduce((sum, n) => sum + (n ?? 0), 0);
+          if (totalAllocated >= feat.abilityChoice.points) return s;
+          const next = { ...current, [ability]: (current[ability] ?? 0) + 1 };
           return {
             draft: {
               ...s.draft,
@@ -207,6 +204,31 @@ export const useBuildStore = create<BuildStoreState>()(
             },
           };
         }),
+
+      decreaseFeatAbilityPoint: (featId, ability) =>
+        set((s) => {
+          const current = s.draft.featAbilityChoices[featId] ?? {};
+          const currentValue = current[ability] ?? 0;
+          if (currentValue <= 0) return s;
+          const next = { ...current, [ability]: currentValue - 1 };
+          if (next[ability] === 0) delete next[ability];
+          return {
+            draft: {
+              ...s.draft,
+              featAbilityChoices: { ...s.draft.featAbilityChoices, [featId]: next },
+              ...touch(),
+            },
+          };
+        }),
+
+      clearFeatAbilityChoice: (featId) =>
+        set((s) => ({
+          draft: {
+            ...s.draft,
+            featAbilityChoices: { ...s.draft.featAbilityChoices, [featId]: {} },
+            ...touch(),
+          },
+        })),
 
       toggleSpell: (spellId) =>
         set((s) => {

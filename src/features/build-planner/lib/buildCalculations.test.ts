@@ -85,12 +85,23 @@ describe('buildCalculations', () => {
       raceId: 'human',
       abilityScores: { ...DEFAULT_SCORES, str: 14, dex: 14 },
       featIds: ['ability-improvement'],
-      featAbilityChoices: { 'ability-improvement': ['str', 'dex'] },
+      featAbilityChoices: { 'ability-improvement': { str: 1, dex: 1 } },
     });
     const scores = finalScores(build);
     // Human +1 to everything, plus +1 STR and +1 DEX chosen from the feat
     expect(scores.str).toBe(16);
     expect(scores.dex).toBe(16);
+  });
+
+  it('allows stacking more than one point on the same ability', () => {
+    const build = makeBuild({
+      raceId: 'human',
+      abilityScores: { ...DEFAULT_SCORES, str: 14 },
+      featIds: ['ability-improvement'],
+      featAbilityChoices: { 'ability-improvement': { str: 2 } },
+    });
+    // Human +1 STR, plus 2 points x +1 each from the feat = +2
+    expect(finalScores(build).str).toBe(17);
   });
 
   it('ignores an ability-choice feat with no choices made yet', () => {
@@ -146,19 +157,28 @@ describe('buildCalculations', () => {
   });
 
   describe('hasIncompleteFeatChoices / buildCompleteness', () => {
-    it('flags a build as incomplete when an ability-choice feat has fewer picks than required', () => {
+    it('flags a build as incomplete when an ability-choice feat has fewer points allocated than required', () => {
       const build = makeBuild({
         featIds: ['ability-improvement'],
-        featAbilityChoices: { 'ability-improvement': ['str'] }, // needs 2 picks, only has 1
+        featAbilityChoices: { 'ability-improvement': { str: 1 } }, // needs 2 points, only has 1
       });
       expect(hasIncompleteFeatChoices(build)).toBe(true);
       expect(buildCompleteness(build).feats).toBe(false);
     });
 
-    it('considers the feats step complete once all picks are made', () => {
+    it('considers the feats step complete once all points are allocated', () => {
       const build = makeBuild({
         featIds: ['ability-improvement'],
-        featAbilityChoices: { 'ability-improvement': ['str', 'dex'] },
+        featAbilityChoices: { 'ability-improvement': { str: 1, dex: 1 } },
+      });
+      expect(hasIncompleteFeatChoices(build)).toBe(false);
+      expect(buildCompleteness(build).feats).toBe(true);
+    });
+
+    it('also completes when both points go into the same ability', () => {
+      const build = makeBuild({
+        featIds: ['ability-improvement'],
+        featAbilityChoices: { 'ability-improvement': { str: 2 } },
       });
       expect(hasIncompleteFeatChoices(build)).toBe(false);
       expect(buildCompleteness(build).feats).toBe(true);

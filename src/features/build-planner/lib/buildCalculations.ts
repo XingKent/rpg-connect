@@ -1,5 +1,5 @@
-import { equipmentStatAbilityKey } from '@/types/bg3';
-import type { AbilityKey, AbilityScores, Build, Equipment } from '@/types/bg3';
+import { equipmentStatAbilityKey, ABILITY_LABELS } from '@/types/bg3';
+import type { AbilityKey, AbilityScores, Build, Equipment, Feat } from '@/types/bg3';
 import { races } from '@/data/races';
 import { classes } from '@/data/classes';
 import { feats } from '@/data/feats';
@@ -42,9 +42,10 @@ export function featBonuses(build: Build): Partial<AbilityScores> {
     }
 
     if (feat.abilityChoice) {
-      const chosen = build.featAbilityChoices[featId] ?? [];
-      for (const key of chosen) {
-        combined[key] = (combined[key] ?? 0) + feat.abilityChoice.amount;
+      const chosen = build.featAbilityChoices[featId] ?? {};
+      for (const key of ABILITY_KEYS) {
+        const points = chosen[key] ?? 0;
+        if (points > 0) combined[key] = (combined[key] ?? 0) + points * feat.abilityChoice.amount;
       }
     }
   }
@@ -120,13 +121,14 @@ export function baseArmorClass(build: Build): number {
   return base + dexContribution + flatBonus;
 }
 
-/** True if any selected feat with an ability-choice sub-step hasn't had all its picks made yet. */
+/** True if any selected feat with an ability-choice sub-step hasn't had all its points allocated yet. */
 export function hasIncompleteFeatChoices(build: Build): boolean {
   return build.featIds.some((featId) => {
     const feat = feats.find((f) => f.id === featId);
     if (!feat?.abilityChoice) return false;
-    const chosen = build.featAbilityChoices[featId] ?? [];
-    return chosen.length < feat.abilityChoice.picks;
+    const chosen = build.featAbilityChoices[featId] ?? {};
+    const totalAllocated = Object.values(chosen).reduce((sum, n) => sum + (n ?? 0), 0);
+    return totalAllocated < feat.abilityChoice.points;
   });
 }
 
@@ -141,4 +143,16 @@ export function buildCompleteness(build: Build) {
     spells: build.spellIds.length > 0,
     equipment: build.equipmentIds.length > 0,
   };
+}
+
+/** Human-readable feat label, appending allocated ability points when the feat has a choice (e.g. "+2 Força"). */
+export function formatFeatLabel(feat: Feat, build: Build): string {
+  if (!feat.abilityChoice) return feat.name;
+  const chosen = build.featAbilityChoices[feat.id] ?? {};
+  const entries = ABILITY_KEYS.filter((key) => (chosen[key] ?? 0) > 0);
+  if (entries.length === 0) return feat.name;
+  const detail = entries
+    .map((key) => `${ABILITY_LABELS[key]} +${(chosen[key] ?? 0) * feat.abilityChoice!.amount}`)
+    .join(', ');
+  return `${feat.name} (${detail})`;
 }

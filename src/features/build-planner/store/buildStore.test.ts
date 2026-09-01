@@ -90,24 +90,59 @@ describe('buildStore', () => {
     expect(useBuildStore.getState().draft.spellIds).not.toContain('fireball');
   });
 
-  it('clears the ability-choice picks when the granting feat is deselected', () => {
-    const { toggleFeat, toggleFeatAbilityChoice } = useBuildStore.getState();
+  it('clears the ability-choice points when the granting feat is deselected', () => {
+    const { toggleFeat, increaseFeatAbilityPoint } = useBuildStore.getState();
     toggleFeat('ability-improvement');
-    toggleFeatAbilityChoice('ability-improvement', 'str');
-    toggleFeatAbilityChoice('ability-improvement', 'dex');
-    expect(useBuildStore.getState().draft.featAbilityChoices['ability-improvement']).toEqual(['str', 'dex']);
+    increaseFeatAbilityPoint('ability-improvement', 'str');
+    increaseFeatAbilityPoint('ability-improvement', 'dex');
+    expect(useBuildStore.getState().draft.featAbilityChoices['ability-improvement']).toEqual({
+      str: 1,
+      dex: 1,
+    });
 
     toggleFeat('ability-improvement'); // deselect
     expect(useBuildStore.getState().draft.featAbilityChoices['ability-improvement']).toBeUndefined();
   });
 
-  it('caps ability-choice picks at the feat-defined number', () => {
-    const { toggleFeat, toggleFeatAbilityChoice } = useBuildStore.getState();
-    toggleFeat('ability-improvement'); // picks: 2
-    toggleFeatAbilityChoice('ability-improvement', 'str');
-    toggleFeatAbilityChoice('ability-improvement', 'dex');
-    toggleFeatAbilityChoice('ability-improvement', 'con'); // ignored, already at 2 picks
-    expect(useBuildStore.getState().draft.featAbilityChoices['ability-improvement']).toEqual(['str', 'dex']);
+  it('caps total allocated points at the feat-defined number', () => {
+    const { toggleFeat, increaseFeatAbilityPoint } = useBuildStore.getState();
+    toggleFeat('ability-improvement'); // points: 2
+    increaseFeatAbilityPoint('ability-improvement', 'str');
+    increaseFeatAbilityPoint('ability-improvement', 'dex');
+    increaseFeatAbilityPoint('ability-improvement', 'con'); // ignored, already at 2 points spent
+    expect(useBuildStore.getState().draft.featAbilityChoices['ability-improvement']).toEqual({
+      str: 1,
+      dex: 1,
+    });
+  });
+
+  it('allows putting more than one point into the same ability', () => {
+    const { toggleFeat, increaseFeatAbilityPoint } = useBuildStore.getState();
+    toggleFeat('ability-improvement'); // points: 2
+    increaseFeatAbilityPoint('ability-improvement', 'str');
+    increaseFeatAbilityPoint('ability-improvement', 'str');
+    expect(useBuildStore.getState().draft.featAbilityChoices['ability-improvement']).toEqual({ str: 2 });
+  });
+
+  it('decreaseFeatAbilityPoint removes a point and drops the key at zero', () => {
+    const { toggleFeat, increaseFeatAbilityPoint, decreaseFeatAbilityPoint } = useBuildStore.getState();
+    toggleFeat('ability-improvement');
+    increaseFeatAbilityPoint('ability-improvement', 'str');
+    increaseFeatAbilityPoint('ability-improvement', 'str');
+    decreaseFeatAbilityPoint('ability-improvement', 'str');
+    expect(useBuildStore.getState().draft.featAbilityChoices['ability-improvement']).toEqual({ str: 1 });
+
+    decreaseFeatAbilityPoint('ability-improvement', 'str');
+    expect(useBuildStore.getState().draft.featAbilityChoices['ability-improvement']).toEqual({});
+  });
+
+  it('clearFeatAbilityChoice resets a single feat without touching others', () => {
+    const { toggleFeat, increaseFeatAbilityPoint, clearFeatAbilityChoice } = useBuildStore.getState();
+    toggleFeat('ability-improvement');
+    increaseFeatAbilityPoint('ability-improvement', 'str');
+    increaseFeatAbilityPoint('ability-improvement', 'dex');
+    clearFeatAbilityChoice('ability-improvement');
+    expect(useBuildStore.getState().draft.featAbilityChoices['ability-improvement']).toEqual({});
   });
 
   describe('equipment slot exclusivity', () => {

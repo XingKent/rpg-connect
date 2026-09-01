@@ -5,8 +5,8 @@ export const feats: Feat[] = [
     id: 'ability-improvement',
     name: 'Aprimoramento de Atributo',
     description:
-      'Escolha 2 atributos diferentes para aumentar em +1 cada, refinando os pontos fortes do personagem.',
-    abilityChoice: { picks: 2, amount: 1 },
+      'Distribua 2 pontos entre os atributos (pode colocar os dois no mesmo), refinando os pontos fortes do personagem.',
+    abilityChoice: { points: 2, amount: 1 },
   },
   {
     id: 'tavern-brawler',

@@ -53,9 +53,9 @@ export interface CharClass {
 }
 
 export interface FeatAbilityChoice {
-  /** How many different abilities the player must pick. */
-  picks: number;
-  /** Bonus applied to each picked ability. */
+  /** Total points the player must distribute across abilities (repeats on the same ability are allowed). */
+  points: number;
+  /** Bonus applied per point allocated to an ability. */
   amount: number;
 }
 
@@ -219,8 +219,8 @@ export interface Build {
   subclassId?: string;
   abilityScores: AbilityScores;
   featIds: string[];
-  /** Chosen abilities per feat, for feats whose abilityChoice requires an extra pick (featId -> ability keys). */
-  featAbilityChoices: Record<string, AbilityKey[]>;
+  /** Points allocated per ability, per feat, for feats whose abilityChoice lets you distribute points (featId -> ability -> points allocated). */
+  featAbilityChoices: Record<string, Partial<Record<AbilityKey, number>>>;
   spellIds: string[];
   equipmentIds: string[];
   createdAt: string;

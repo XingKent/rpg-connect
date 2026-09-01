@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import type { Build } from '@/types/bg3';
 import { normalizeBuild } from '@/features/build-planner/lib/normalizeBuild';
 
 describe('normalizeBuild', () => {
@@ -49,6 +50,24 @@ describe('normalizeBuild', () => {
   it('clamps an out-of-range level instead of trusting corrupted data', () => {
     const build = normalizeBuild({ level: 99 });
     expect(build.level).toBe(12);
+  });
+
+  it('migrates the legacy array-based featAbilityChoices shape to points-per-ability', () => {
+    const old = {
+      id: 'old-id-2',
+      featIds: ['ability-improvement'],
+      featAbilityChoices: { 'ability-improvement': ['str', 'dex'] }, // pre-repeats shape
+    };
+
+    const normalized = normalizeBuild(old as unknown as Partial<Build>);
+    expect(normalized.featAbilityChoices).toEqual({ 'ability-improvement': { str: 1, dex: 1 } });
+  });
+
+  it('discards malformed featAbilityChoices entries instead of throwing', () => {
+    const build = normalizeBuild({
+      featAbilityChoices: { foo: 'not-an-object-or-array' },
+    } as unknown as Partial<Build>);
+    expect(build.featAbilityChoices).toEqual({ foo: {} });
   });
 
   it('falls back to safe defaults for a completely empty object', () => {

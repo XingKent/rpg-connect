@@ -11,7 +11,9 @@ export function FeatsStep() {
   const draft = useBuildStore((s) => s.draft);
   const toggleFeat = useBuildStore((s) => s.toggleFeat);
   const clearFeats = useBuildStore((s) => s.clearFeats);
-  const toggleFeatAbilityChoice = useBuildStore((s) => s.toggleFeatAbilityChoice);
+  const increaseFeatAbilityPoint = useBuildStore((s) => s.increaseFeatAbilityPoint);
+  const decreaseFeatAbilityPoint = useBuildStore((s) => s.decreaseFeatAbilityPoint);
+  const clearFeatAbilityChoice = useBuildStore((s) => s.clearFeatAbilityChoice);
 
   const featLimit = featSlotsForLevel(draft.level);
   const limitReached = draft.featIds.length >= featLimit;
@@ -61,7 +63,7 @@ export function FeatsStep() {
         <div className="parchment-panel flex flex-col gap-5 rounded-sm border-l-2 !border-l-gold-dim p-4">
           <div>
             <span className="font-data text-[11px] uppercase tracking-[0.15em] text-gold-dim">
-              Sub-etapa - Escolha de atributos
+              Sub-etapa: Escolha de atributos
             </span>
             <p className="mt-1 text-sm text-ink-dim">
               Alguns talentos escolhidos exigem uma decisão extra antes de seguir.
@@ -70,44 +72,73 @@ export function FeatsStep() {
 
           {selectedFeatsWithChoice.map((feat) => {
             const choice = feat.abilityChoice!;
-            const chosen = draft.featAbilityChoices[feat.id] ?? [];
-            const done = chosen.length >= choice.picks;
+            const allocated = draft.featAbilityChoices[feat.id] ?? {};
+            const totalAllocated = ABILITY_ORDER.reduce((sum, key) => sum + (allocated[key] ?? 0), 0);
+            const done = totalAllocated >= choice.points;
+            const hasAnyAllocated = totalAllocated > 0;
+
             return (
               <div key={feat.id}>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rune-title text-sm text-ink">{feat.name}</span>
-                  <span
-                    className={`rounded-sm border px-1.5 py-0.5 font-data text-[10px] uppercase tracking-[0.08em] ${
-                      done
-                        ? 'border-emerald-bright/40 bg-emerald/10 text-emerald-bright'
-                        : 'border-gold-bright/40 bg-gold/10 text-gold-bright'
-                    }`}
-                  >
-                    {chosen.length}/{choice.picks} selecionados
-                  </span>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rune-title text-sm text-ink">{feat.name}</span>
+                    <span
+                      className={`rounded-sm border px-1.5 py-0.5 font-data text-[10px] uppercase tracking-[0.08em] ${
+                        done
+                          ? 'border-emerald-bright/40 bg-emerald/10 text-emerald-bright'
+                          : 'border-gold-bright/40 bg-gold/10 text-gold-bright'
+                      }`}
+                    >
+                      {totalAllocated}/{choice.points} pontos
+                    </span>
+                  </div>
+                  {hasAnyAllocated && (
+                    <Button variant="danger" onClick={() => clearFeatAbilityChoice(feat.id)}>
+                      Limpar seleção
+                    </Button>
+                  )}
                 </div>
                 <p className="mt-1 text-xs text-ink-faint">
-                  Escolha {choice.picks} atributos para receber +{choice.amount} cada.
+                  Distribua {choice.points} ponto{choice.points > 1 ? 's' : ''} entre os atributos (pode
+                  colocar mais de um ponto no mesmo atributo). Cada ponto vale +{choice.amount}.
                 </p>
-                <div className="mt-2 flex flex-wrap gap-2">
+                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
                   {ABILITY_ORDER.map((ability) => {
-                    const isChosen = chosen.includes(ability);
-                    const disabled = !isChosen && chosen.length >= choice.picks;
+                    const points = allocated[ability] ?? 0;
+                    const canIncrease = totalAllocated < choice.points;
                     return (
-                      <button
+                      <div
                         key={ability}
-                        type="button"
-                        onClick={() => toggleFeatAbilityChoice(feat.id, ability)}
-                        disabled={disabled}
-                        aria-pressed={isChosen}
-                        className={`focus-ring rounded-sm border px-3 py-1.5 font-data text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-30 ${
-                          isChosen
-                            ? 'border-gold-bright bg-gold/10 text-gold-bright'
-                            : 'border-border-ember text-ink-dim hover:border-border-ember-bright hover:text-ink'
-                        }`}
+                        className="flex items-center justify-between gap-2 rounded-sm border border-border-ember px-3 py-2"
                       >
-                        {ABILITY_LABELS[ability]} +{choice.amount}
-                      </button>
+                        <div>
+                          <div className="font-data text-[10px] uppercase tracking-[0.08em] text-ink-faint">
+                            {ABILITY_LABELS[ability]}
+                          </div>
+                          <div className="font-data text-sm text-gold-bright">+{points * choice.amount}</div>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => decreaseFeatAbilityPoint(feat.id, ability)}
+                            disabled={points === 0}
+                            aria-label={`Remover ponto de ${ABILITY_LABELS[ability]}`}
+                            className="focus-ring flex h-6 w-6 items-center justify-center rounded-full border border-border-ember text-ink-dim hover:border-crimson hover:text-crimson-bright disabled:cursor-not-allowed disabled:opacity-30"
+                          >
+                            −
+                          </button>
+                          <span className="w-4 text-center font-data text-xs text-ink">{points}</span>
+                          <button
+                            type="button"
+                            onClick={() => increaseFeatAbilityPoint(feat.id, ability)}
+                            disabled={!canIncrease}
+                            aria-label={`Adicionar ponto em ${ABILITY_LABELS[ability]}`}
+                            className="focus-ring flex h-6 w-6 items-center justify-center rounded-full border border-border-ember text-ink-dim hover:border-gold hover:text-gold-bright disabled:cursor-not-allowed disabled:opacity-30"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
                     );
                   })}
                 </div>

@@ -7,7 +7,12 @@ import { equipment } from '@/data/equipment';
 import { ABILITY_LABELS, type AbilityKey, type Build } from '@/types/bg3';
 import { decodeSharedBuild } from '@/features/build-planner/lib/shareBuild';
 import { normalizeBuild } from '@/features/build-planner/lib/normalizeBuild';
-import { finalScores, finalModifiers, baseArmorClass } from '@/features/build-planner/lib/buildCalculations';
+import {
+  finalScores,
+  finalModifiers,
+  baseArmorClass,
+  formatFeatLabel,
+} from '@/features/build-planner/lib/buildCalculations';
 import { Button } from '@/components/ui/Button';
 import { useBuildStore } from '@/features/build-planner/store/buildStore';
 import { useNavigate } from 'react-router-dom';
@@ -46,13 +51,7 @@ export function SharedBuildView() {
   const mods = finalModifiers(build);
   const ac = baseArmorClass(build);
   const chosenFeats = feats.filter((f) => build.featIds.includes(f.id));
-  const featLabels = chosenFeats.map((f) => {
-    if (!f.abilityChoice) return f.name;
-    const chosen = build.featAbilityChoices[f.id] ?? [];
-    if (chosen.length === 0) return f.name;
-    const detail = chosen.map((a) => `${ABILITY_LABELS[a]} +${f.abilityChoice!.amount}`).join(', ');
-    return `${f.name} (${detail})`;
-  });
+  const featLabels = chosenFeats.map((f) => formatFeatLabel(f, build));
   const chosenSpells = spells.filter((s) => build.spellIds.includes(s.id));
   const chosenEquipment = equipment.filter((e) => build.equipmentIds.includes(e.id));
 
