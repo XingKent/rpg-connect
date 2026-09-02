@@ -69,7 +69,7 @@ export function SharedBuildView() {
           </span>
           <h1 className="rune-title text-2xl text-gold-bright">{build.name || 'Build sem nome'}</h1>
           <p className="mt-1 font-data text-sm text-ink-dim">
-            Nível {build.level} · {race ? `${race.name}${subrace ? ` (${subrace.name})` : ''}` : '-'} ·{' '}
+            Nível {build.level}, {race ? `${race.name}${subrace ? ` (${subrace.name})` : ''}` : '-'},{' '}
             {cls ? `${cls.name}${subclass ? ` - ${subclass.name}` : ''}` : '-'}
           </p>
         </div>

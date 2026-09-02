@@ -55,7 +55,7 @@ export function RaceStep() {
               <SelectCard
                 key={sub.id}
                 title={sub.name}
-                description={sub.traits.join(' · ')}
+                description={sub.traits.join(', ')}
                 selected={draft.subraceId === sub.id}
                 onClick={() => setRace(selectedRace.id, sub.id)}
               />

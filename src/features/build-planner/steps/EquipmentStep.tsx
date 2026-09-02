@@ -108,7 +108,7 @@ export function EquipmentStep() {
           {pageItems.map((item) => (
             <SelectCard
               key={item.id}
-              eyebrow={`${RARITY_LABELS[item.rarity]} · ${EQUIPMENT_SLOT_LABELS[item.slot]}`}
+              eyebrow={`${RARITY_LABELS[item.rarity]}, ${EQUIPMENT_SLOT_LABELS[item.slot]}`}
               title={item.name}
               titleBadge={<SourceBadge source={item.source} />}
               description={item.description}
@@ -138,7 +138,7 @@ export function EquipmentStep() {
                       {item.actions.map((action) => (
                         <li key={action.name} className="text-[11px] text-ink-dim">
                           <span className="text-gold-dim">
-                            {EQUIPMENT_ACTION_TYPE_LABELS[action.type]} ·{' '}
+                            {EQUIPMENT_ACTION_TYPE_LABELS[action.type]},{' '}
                             {EQUIPMENT_ACTION_COOLDOWN_LABELS[action.cooldown]}:
                           </span>{' '}
                           {action.name} - {action.description}

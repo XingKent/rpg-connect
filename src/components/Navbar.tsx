@@ -84,7 +84,7 @@ function RoadmapDropdown({ onClose }: { onClose: () => void }) {
     <div className="parchment-panel absolute right-0 top-[calc(100%+0.5rem)] z-20 w-[min(22rem,90vw)] rounded-sm p-2">
       <div className="px-2 py-1.5">
         <span className="font-data text-[11px] uppercase tracking-[0.15em] text-ink-faint">
-          Roteiro do projeto · {TOTAL_PARTS} partes
+          Roteiro do projeto: {TOTAL_PARTS} partes
         </span>
       </div>
       <RoadmapList onNavigate={onClose} />
