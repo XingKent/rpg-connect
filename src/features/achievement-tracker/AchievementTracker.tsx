@@ -10,7 +10,10 @@ export function AchievementTracker() {
   const toggle = useAchievementStore((s) => s.toggle);
   const resetAll = useAchievementStore((s) => s.resetAll);
 
-  const progress = computeProgress(achievements, checked);
+  // Hidden achievements (easter eggs) stay off the list and out of the count
+  // entirely until they've actually been unlocked.
+  const visibleAchievements = achievements.filter((a) => !a.hidden || checked[a.id]);
+  const progress = computeProgress(visibleAchievements, checked);
 
   function handleReset() {
     if (window.confirm('Isso desmarca todas as conquistas. Continuar?')) {
@@ -45,7 +48,7 @@ export function AchievementTracker() {
               </span>
             </div>
             <ul className="flex flex-col gap-2">
-              {achievements
+              {visibleAchievements
                 .filter((a) => a.category === cat.category)
                 .map((achievement) => (
                   <li key={achievement.id}>

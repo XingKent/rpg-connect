@@ -1,8 +1,13 @@
+import { HiddenEye } from '@/components/HiddenEye';
+
 export function Footer() {
   return (
     <footer className="mt-auto border-t border-border-ember bg-surface/60">
       <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-center font-data text-[11px] text-ink-faint md:px-6">
-        <p>Baldur's Gate 3 é uma marca da Larian Studios. Este é um projeto de fã, sem afiliação oficial.</p>
+        <p>
+          Baldur's Gate 3 é uma marca da Larian Studios. Este é um projeto de fã, sem afiliação oficial
+          <HiddenEye />
+        </p>
         <p>
           Dados de magias e itens combinam o{' '}
           <a

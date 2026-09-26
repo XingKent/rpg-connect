@@ -424,4 +424,14 @@ export const achievements: Achievement[] = [
     category: 'Finais',
     image: '/achievements/A-Critical_Hit.webp',
   },
+
+  // Secreta (easter egg, não aparece na lista até ser desbloqueada)
+  {
+    id: 'Sharp-Eyed',
+    name: 'Percepção Aguçada',
+    description:
+      'Você reparou em algo que quase ninguém repara. Nem toda descoberta precisa de um mapa do tesouro.',
+    category: 'Secreta',
+    hidden: true,
+  },
 ];
