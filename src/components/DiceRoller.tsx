@@ -4,19 +4,22 @@ import {
   DICE_TYPES,
   CUSTOM_DIE_MIN,
   CUSTOM_DIE_MAX,
+  DICE_COUNT_MIN,
+  DICE_COUNT_MAX,
   rollDie,
+  rollMultiple,
   classifyRoll,
-  computeRollTotal,
+  computeMultiRollTotal,
   type RollOutcome,
 } from '@/lib/dice';
 
 interface RollEntry {
   id: string;
   die: number;
+  count: number;
   modifier: number;
-  roll: number;
+  rolls: number[];
   total: number;
-  outcome: RollOutcome;
 }
 
 const ROLL_ANIMATION_FRAMES = 7;
@@ -28,8 +31,43 @@ const OUTCOME_TEXT_CLASSES: Record<RollOutcome, string> = {
   normal: 'text-ink',
 };
 
+function dieLabel(count: number, die: number): string {
+  return count > 1 ? `${count}d${die}` : `d${die}`;
+}
+
+function RollResult({ entry }: { entry: RollEntry }) {
+  if (entry.count === 1) {
+    const outcome = classifyRoll(entry.rolls[0], entry.die);
+    return (
+      <span className={OUTCOME_TEXT_CLASSES[outcome]}>
+        {outcome === 'fumble' && 'Erro crítico! '}
+        {outcome === 'critical' && 'Crítico! '}
+        {entry.rolls[0]}
+        {outcome === 'normal' && entry.modifier !== 0 && ` → ${entry.total}`}
+      </span>
+    );
+  }
+
+  return (
+    <span className="text-ink">
+      {entry.rolls.map((roll, i) => {
+        const outcome = classifyRoll(roll, entry.die);
+        return (
+          <span key={i}>
+            <span className={OUTCOME_TEXT_CLASSES[outcome]}>{roll}</span>
+            {i < entry.rolls.length - 1 && ', '}
+          </span>
+        );
+      })}
+      {' → '}
+      <span className="text-gold-bright">{entry.total}</span>
+    </span>
+  );
+}
+
 export function DiceRoller() {
   const [open, setOpen] = useState(false);
+  const [diceCount, setDiceCount] = useState(1);
   const [modifier, setModifier] = useState(0);
   const [customDie, setCustomDie] = useState(30);
   const [history, setHistory] = useState<RollEntry[]>([]);
@@ -64,15 +102,14 @@ export function DiceRoller() {
       frame += 1;
       if (frame >= ROLL_ANIMATION_FRAMES) {
         clearInterval(interval);
-        const roll = rollDie(die);
-        const outcome = classifyRoll(roll, die);
+        const rolls = rollMultiple(die, diceCount);
         const entry: RollEntry = {
           id: crypto.randomUUID(),
           die,
+          count: diceCount,
           modifier,
-          roll,
-          total: computeRollTotal(roll, die, modifier),
-          outcome,
+          rolls,
+          total: computeMultiRollTotal(rolls, die, modifier),
         };
         setHistory((prev) => [entry, ...prev].slice(0, 8));
         setRollingDie(null);
@@ -99,6 +136,38 @@ export function DiceRoller() {
           <p className="mt-1 text-xs text-ink-faint">Só por diversão. Não afeta nenhuma build.</p>
 
           <div className="mt-3 flex items-center justify-between gap-3">
+            <label
+              htmlFor="dice-count"
+              className="font-data text-[11px] uppercase tracking-[0.1em] text-ink-faint"
+            >
+              Quantidade de dados
+            </label>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setDiceCount((c) => Math.max(DICE_COUNT_MIN, c - 1))}
+                disabled={diceCount <= DICE_COUNT_MIN}
+                aria-label="Diminuir quantidade de dados"
+                className="focus-ring flex h-6 w-6 items-center justify-center rounded-full border border-border-ember text-ink-dim hover:border-crimson hover:text-crimson-bright disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                −
+              </button>
+              <span id="dice-count" className="w-8 text-center font-data text-sm text-ink">
+                {diceCount}
+              </span>
+              <button
+                type="button"
+                onClick={() => setDiceCount((c) => Math.min(DICE_COUNT_MAX, c + 1))}
+                disabled={diceCount >= DICE_COUNT_MAX}
+                aria-label="Aumentar quantidade de dados"
+                className="focus-ring flex h-6 w-6 items-center justify-center rounded-full border border-border-ember text-ink-dim hover:border-gold hover:text-gold-bright disabled:cursor-not-allowed disabled:opacity-30"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-2 flex items-center justify-between gap-3">
             <label
               htmlFor="dice-modifier"
               className="font-data text-[11px] uppercase tracking-[0.1em] text-ink-faint"
@@ -141,7 +210,7 @@ export function DiceRoller() {
                     : 'border-border-ember text-ink-dim hover:border-gold-dim hover:text-gold-bright disabled:opacity-40'
                 }`}
               >
-                <span>d{die}</span>
+                <span>{dieLabel(diceCount, die)}</span>
                 {rollingDie === die && <span className="text-[10px] text-gold-bright">{rollingValue}</span>}
               </button>
             ))}
@@ -151,7 +220,7 @@ export function DiceRoller() {
             <label htmlFor="custom-die" className="sr-only">
               Dado personalizado
             </label>
-            <span className="font-data text-xs text-ink-faint">d</span>
+            <span className="font-data text-xs text-ink-faint">{diceCount > 1 ? `${diceCount}d` : 'd'}</span>
             <input
               id="custom-die"
               type="number"
@@ -198,18 +267,13 @@ export function DiceRoller() {
                 {history.map((entry) => (
                   <li
                     key={entry.id}
-                    className="flex items-center justify-between font-data text-xs text-ink-dim"
+                    className="flex items-center justify-between gap-3 font-data text-xs text-ink-dim"
                   >
-                    <span>
-                      d{entry.die}
+                    <span className="shrink-0">
+                      {dieLabel(entry.count, entry.die)}
                       {entry.modifier !== 0 && ` (${entry.modifier >= 0 ? '+' : ''}${entry.modifier})`}
                     </span>
-                    <span className={OUTCOME_TEXT_CLASSES[entry.outcome]}>
-                      {entry.outcome === 'fumble' && 'Erro crítico! '}
-                      {entry.outcome === 'critical' && 'Crítico! '}
-                      {entry.roll}
-                      {entry.outcome === 'normal' && entry.modifier !== 0 && ` → ${entry.total}`}
-                    </span>
+                    <RollResult entry={entry} />
                   </li>
                 ))}
               </ul>

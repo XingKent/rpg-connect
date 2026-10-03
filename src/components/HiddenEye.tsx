@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { rollDie } from '@/lib/dice';
 import { rollPerceptionCheck, PERCEPTION_DC, type PerceptionResult } from '@/lib/perceptionCheck';
 import { useAchievementStore } from '@/features/achievement-tracker/store/achievementStore';
+import { achievements } from '@/features/achievement-tracker/data/achievements';
+import { AchievementUnlockedPopup } from '@/features/achievement-tracker/components/AchievementUnlockedPopup';
 import { CriticalSparkles } from '@/components/CriticalSparkles';
 
 const SHARP_EYED_ID = 'Sharp-Eyed';
+const SHARP_EYED_ACHIEVEMENT = achievements.find((a) => a.id === SHARP_EYED_ID)!;
 const ROLL_ANIMATION_FRAMES = 6;
 const ROLL_ANIMATION_INTERVAL_MS = 50;
 const TOAST_DURATION_MS = 5000;
@@ -25,6 +28,7 @@ export function HiddenEye() {
   const [displayValue, setDisplayValue] = useState<number | null>(null);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [showSparkles, setShowSparkles] = useState(false);
+  const [showUnlockPopup, setShowUnlockPopup] = useState(false);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -50,6 +54,7 @@ export function HiddenEye() {
 
         if (outcome.result !== 'fail') {
           unlock(SHARP_EYED_ID);
+          if (!alreadyUnlocked) setShowUnlockPopup(true);
         }
         if (outcome.result === 'critical') {
           setShowSparkles(true);
@@ -89,6 +94,13 @@ export function HiddenEye() {
       )}
 
       {showSparkles && <CriticalSparkles onDone={() => setShowSparkles(false)} />}
+
+      {showUnlockPopup && (
+        <AchievementUnlockedPopup
+          achievement={SHARP_EYED_ACHIEVEMENT}
+          onDismiss={() => setShowUnlockPopup(false)}
+        />
+      )}
     </>
   );
 }
@@ -106,8 +118,7 @@ function ToastMessage({ toast }: { toast: ToastState }) {
   if (toast.result === 'critical') {
     return (
       <span className="text-yellow-400">
-        Crítico natural!{' '}
-        {toast.firstTime ? 'Conquista desbloqueada: Percepção Aguçada.' : 'De novo!? Impressionante.'}
+        Crítico natural! {toast.firstTime ? 'Sucesso espetacular.' : 'De novo!? Impressionante.'}
       </span>
     );
   }
@@ -115,7 +126,7 @@ function ToastMessage({ toast }: { toast: ToastState }) {
   return (
     <span className="text-gold-bright">
       {toast.roll} vs CD {PERCEPTION_DC}.{' '}
-      {toast.firstTime ? 'Conquista desbloqueada: Percepção Aguçada.' : 'Você já sabia, mas ainda funciona.'}
+      {toast.firstTime ? 'Sucesso!' : 'Você já sabia, mas ainda funciona.'}
     </span>
   );
 }
